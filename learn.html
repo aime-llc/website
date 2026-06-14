@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn more — aime</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --ink: #1d1d1f;
+      --muted: #6e6e73;
+      --accent: #0071e3;
+      --bg: #ffffff;
+      --surface: #f5f5f7;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0;
+      inset-inline: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 52px;
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      background: rgba(255, 255, 255, 0.72);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .nav-logo {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 18px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: 980px;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── Shared section shell ── */
+    section {
+      padding: 64px 20px;
+    }
+
+    @media (min-width: 768px) {
+      section { padding: 80px 24px; }
+    }
+
+    .eyebrow {
+      text-align: center;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.625rem, 5vw, 2.75rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .section-sub {
+      text-align: center;
+      font-size: 1.0625rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 48px;
+      line-height: 1.6;
+    }
+
+    .surface { background: var(--surface); }
+    .dark {
+      background: var(--ink);
+      color: #fff;
+    }
+    .dark .eyebrow { color: #6ac4ff; }
+    .dark .section-title { color: #fff; }
+    .dark .section-sub { color: rgba(255,255,255,0.55); }
+
+    /* ── Hero ── */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 120px 20px 72px;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .hero { padding: 148px 24px 96px; gap: 24px; }
+    }
+
+    h1 {
+      font-size: clamp(2.75rem, 9vw, 6rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      color: var(--ink);
+    }
+
+    .tagline {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--muted);
+      max-width: 460px;
+      line-height: 1.6;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 28px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 980px;
+      text-decoration: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .cta:hover { opacity: 0.85; transform: scale(0.98); }
+
+    .cta-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 28px;
+      background: transparent;
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 980px;
+      text-decoration: none;
+      transition: background 0.2s ease;
+    }
+
+    .cta-ghost:hover { background: var(--surface); }
+
+    .cta-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* ── Capabilities grid ── */
+    .caps-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 640px) {
+      .caps-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .cap-card {
+      background: var(--bg);
+      border-radius: 18px;
+      padding: 24px 20px;
+    }
+
+    .cap-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .cap-card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .cap-card p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Audience cards ── */
+    .audience-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 600px) {
+      .audience-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .aud-card {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 32px 28px;
+      position: relative;
+    }
+
+    .aud-icon {
+      font-size: 2.25rem;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .aud-card h3 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      color: var(--ink);
+    }
+
+    .aud-card p {
+      font-size: 0.9375rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .aud-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(0, 113, 227, 0.08);
+      padding: 4px 10px;
+      border-radius: 980px;
+    }
+
+    /* ── Internet section pillars ── */
+    .internet-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 560px) {
+      .internet-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .inet-card {
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 20px;
+      padding: 32px 24px;
+    }
+
+    .inet-icon {
+      font-size: 2.25rem;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .inet-card h3 {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .inet-card p {
+      font-size: 0.9375rem;
+      color: rgba(255, 255, 255, 0.5);
+      line-height: 1.55;
+    }
+
+    /* ── Teacher steps ── */
+    .steps {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 16px;
+      align-items: start;
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .step:last-child { border-bottom: none; }
+
+    .step-emoji {
+      font-size: 1.75rem;
+      padding-top: 2px;
+      text-align: center;
+    }
+
+    .step h3 {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      color: var(--ink);
+      padding-top: 4px;
+    }
+
+    .step p {
+      font-size: 0.9375rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* ── FAQ ── */
+    .faq {
+      max-width: 660px;
+      margin: 0 auto;
+    }
+
+    details {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+      padding: 20px 0;
+    }
+
+    details:last-child { border-bottom: none; }
+
+    summary {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--ink);
+      gap: 12px;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    summary::after {
+      content: '+';
+      font-size: 1.375rem;
+      font-weight: 300;
+      color: var(--accent);
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    details[open] summary::after { content: '−'; }
+
+    .faq-answer {
+      margin-top: 14px;
+      font-size: 0.9375rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── CTA section ── */
+    .cta-section {
+      text-align: center;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.8125rem;
+      color: var(--muted);
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">aime</a>
+    <a class="nav-cta" href="mailto:support@aime.fyi">Get started</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <p class="eyebrow">learn more</p>
+    <h1>Smart help.<br>No strings.</h1>
+    <p class="tagline">Whether you're building a business, learning something new, or just want a smarter day, aime meets you where you are.</p>
+    <div class="cta-group">
+      <a class="cta" href="mailto:support@aime.fyi">Get early access &rarr;</a>
+      <a class="cta-ghost" href="index.html">&larr; Back home</a>
+    </div>
+  </section>
+
+  <!-- Capabilities -->
+  <section class="surface">
+    <p class="eyebrow">capabilities</p>
+    <h2 class="section-title">More than a chatbot 💬</h2>
+    <p class="section-sub">Think of it as a thinking partner that actually learns who you are and what you need.</p>
+
+    <div class="caps-grid">
+      <div class="cap-card">
+        <span class="cap-icon">🧠</span>
+        <h3>Learns with you</h3>
+        <p>Ask it to explain anything. It teaches, not just tells.</p>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon">✍️</span>
+        <h3>Helps you write</h3>
+        <p>Drafts, edits, summaries. From quick emails to full documents.</p>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon">📋</span>
+        <h3>Organizes your thinking</h3>
+        <p>Plans, outlines, to-do lists. Turns scattered thoughts into clarity.</p>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon">💡</span>
+        <h3>Answers questions</h3>
+        <p>From quick facts to deep, nuanced thinking. Ask it anything.</p>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon">🔧</span>
+        <h3>Adapts to you</h3>
+        <p>Configure it to match your workflow, your style, your preferences.</p>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon">📈</span>
+        <h3>Grows with you</h3>
+        <p>The more you use it, the better it understands what you actually need.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who it's for -->
+  <section>
+    <p class="eyebrow">built for everyone</p>
+    <h2 class="section-title">Find yourself here 👇</h2>
+    <p class="section-sub">aime works differently for different people. Which one sounds like you?</p>
+
+    <div class="audience-grid">
+      <div class="aud-card">
+        <span class="aud-icon">🔧</span>
+        <h3>Engineers &amp; developers</h3>
+        <p>You know how to configure things. aime hands you the keys. Run it your way, hook it into your workflow, and extend it however you like. It's a powerful foundation you build on top of.</p>
+        <span class="aud-tag">Deep configuration available</span>
+      </div>
+      <div class="aud-card">
+        <span class="aud-icon">⚡</span>
+        <h3>Busy business owners</h3>
+        <p>No time for a learning curve. aime gets to the point, handles the repetitive stuff, and helps you make faster decisions. Set it up once, then let it work quietly in the background.</p>
+        <span class="aud-tag">Fast setup. Immediate value.</span>
+      </div>
+      <div class="aud-card">
+        <span class="aud-icon">🏗️</span>
+        <h3>Hands-on builders</h3>
+        <p>You want to understand every piece. aime walks you through it, explains as you go, and builds alongside you. Ask questions. Challenge it. Learn as you build something real.</p>
+        <span class="aud-tag">Learn as you go</span>
+      </div>
+      <div class="aud-card">
+        <span class="aud-icon">🌱</span>
+        <h3>Individuals</h3>
+        <p>Just want a smarter, more organized life? aime helps with goals, learning, writing, planning, and anything in between. No technical background needed. Just start talking.</p>
+        <span class="aud-tag">No setup needed</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Internet on your terms -->
+  <section class="dark">
+    <p class="eyebrow">your privacy</p>
+    <h2 class="section-title">Online when you say so.<br>Offline by default. 🔒</h2>
+    <p class="section-sub">Most AI is always connected, always sending. aime isn't. It lives on your device, and nothing leaves unless you ask it to.</p>
+
+    <div class="internet-grid">
+      <div class="inet-card">
+        <span class="inet-icon">🔒</span>
+        <h3>Offline by default</h3>
+        <p>Nothing leaves your device unless you ask. No background syncing, no data collection, no profiles being built while you sleep.</p>
+      </div>
+      <div class="inet-card">
+        <span class="inet-icon">🌐</span>
+        <h3>Online on request</h3>
+        <p>Need current info? Just ask. It'll search, summarize, and come back with what you need. One request, then right back offline. You stay in control.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- The teacher model -->
+  <section class="surface">
+    <p class="eyebrow">how we work together</p>
+    <h2 class="section-title">We help you start. You take it from there. 🎓</h2>
+    <p class="section-sub">Think of it like having a great teacher. They work through things with you, answer every question, then send you home to do your own thing. Come back any time.</p>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-emoji">👋</span>
+        <div>
+          <h3>We get you set up</h3>
+          <p>We'll get aime running for you, make sure it fits your life or work, and walk you through the basics at your pace.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-emoji">🧑‍🏫</span>
+        <div>
+          <h3>You learn together</h3>
+          <p>Ask it anything. It explains as it helps. The more you work together, the more it understands what you're really after.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-emoji">🏠</span>
+        <div>
+          <h3>Work at your own pace</h3>
+          <p>Once you've got the hang of it, run it however you like. No check-ins required. No subscription holding your work hostage.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-emoji">💬</span>
+        <div>
+          <h3>Come back any time</h3>
+          <p>New questions, new features, something you want to build next. We're always here, and the door is always open.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <p class="eyebrow">questions</p>
+    <h2 class="section-title">Common questions ❓</h2>
+    <p class="section-sub">No jargon, just honest answers.</p>
+
+    <div class="faq">
+      <details>
+        <summary>Does aime send my data anywhere?</summary>
+        <p class="faq-answer">Only if you ask it to reach the internet. By default, everything stays on your device. Your conversations, your goals, your history — all local, all yours. Nothing is sent to a server, analyzed in the background, or shared with anyone.</p>
+      </details>
+      <details>
+        <summary>Do I need to be technical to use it?</summary>
+        <p class="faq-answer">Not at all. aime is built to be friendly for everyone, from first-timers to seasoned engineers. If you're technical, there's plenty to configure. If you're not, just start a conversation and it figures out the rest.</p>
+      </details>
+      <details>
+        <summary>What does "runs locally" actually mean?</summary>
+        <p class="faq-answer">It means the AI runs on your computer or phone, not on a company's server somewhere. Think of it like an app that lives on your device rather than a website you visit. The result: faster, private, and yours to keep.</p>
+      </details>
+      <details>
+        <summary>Can it connect to the internet when I need it to?</summary>
+        <p class="faq-answer">Yes. When you need real-time information — news, research, a quick lookup — just say so. aime will reach out, get what you need, and bring it back. You're always the one giving permission. It never goes online on its own.</p>
+      </details>
+      <details>
+        <summary>How is this different from ChatGPT or other AI tools?</summary>
+        <p class="faq-answer">Most AI tools live in the cloud, which means your data travels to their servers every time you use them. aime is different: it runs on your machine, saves locally, and only reaches out when you say so. It's also designed to actually know you over time, not just answer one-off questions.</p>
+      </details>
+      <details>
+        <summary>Is there a cost?</summary>
+        <p class="faq-answer">We're in early access right now. Drop us a note and we'll reach out personally to talk through options. Our goal is to make this accessible, and we'll work something out together.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section surface">
+    <p class="eyebrow">ready?</p>
+    <h2 class="section-title">Let's get you started ✨</h2>
+    <p class="section-sub">Drop us a note and we'll reach out to help you get set up personally.</p>
+    <a class="cta" href="mailto:support@aime.fyi">Get early access &rarr;</a>
+  </section>
+
+  <footer>
+    Questions? <a href="mailto:support@aime.fyi">support@aime.fyi</a>
+    &nbsp;&middot;&nbsp; &copy; 2026 aime
+  </footer>
+
+</body>
+</html>
