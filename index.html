@@ -63,9 +63,7 @@
       text-decoration: none;
     }
 
-    .nav-link:hover {
-      text-decoration: underline;
-    }
+    .nav-link:hover { text-decoration: underline; }
 
     /* ── Hero ── */
     .hero {
@@ -107,7 +105,7 @@
       font-size: clamp(1rem, 2.5vw, 1.375rem);
       font-weight: 400;
       color: var(--muted);
-      max-width: 480px;
+      width: min(480px, 92%);
       line-height: 1.55;
       letter-spacing: -0.01em;
     }
@@ -135,10 +133,7 @@
       transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
-    .cta:hover {
-      opacity: 0.85;
-      transform: scale(0.98);
-    }
+    .cta:hover { opacity: 0.85; transform: scale(0.98); }
 
     .cta-ghost {
       display: inline-flex;
@@ -155,9 +150,7 @@
       transition: background 0.2s ease;
     }
 
-    .cta-ghost:hover {
-      background: var(--surface);
-    }
+    .cta-ghost:hover { background: var(--surface); }
 
     /* ── Section shell ── */
     section {
@@ -167,6 +160,8 @@
     @media (min-width: 768px) {
       section { padding: 80px 24px; }
     }
+
+    section[id] { scroll-margin-top: 72px; }
 
     .section-label {
       text-align: center;
@@ -186,21 +181,21 @@
       line-height: 1.1;
       color: var(--ink);
       margin-bottom: 12px;
+      width: min(700px, 94%);
+      margin-inline: auto;
     }
 
     .section-sub {
       text-align: center;
       font-size: 1.0625rem;
       color: var(--muted);
-      max-width: 460px;
+      width: min(460px, 92%);
       margin: 0 auto 48px;
       line-height: 1.55;
     }
 
     /* ── About strip ── */
-    .about {
-      background: var(--surface);
-    }
+    .about { background: var(--surface); }
 
     .about-grid {
       display: grid;
@@ -214,16 +209,31 @@
       .about-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
-    .about-card {
+    /* ── Interactive cards ── */
+    .card-interactive {
       background: var(--bg);
       border-radius: 20px;
       padding: 28px 24px;
       text-align: left;
-      transition: transform 0.25s ease;
+      cursor: pointer;
+      outline: none;
+      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.22s ease;
+      position: relative;
     }
 
-    .about-card:hover {
-      transform: translateY(-4px);
+    .card-interactive:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-interactive:active {
+      transform: scale(0.97);
+      transition-duration: 0.1s;
+    }
+
+    .card-interactive:focus-visible {
+      box-shadow: 0 0 0 3px var(--accent);
     }
 
     .card-icon {
@@ -232,7 +242,7 @@
       display: block;
     }
 
-    .about-card h3 {
+    .card-interactive h3 {
       font-size: 1.0625rem;
       font-weight: 600;
       letter-spacing: -0.02em;
@@ -240,10 +250,63 @@
       color: var(--ink);
     }
 
-    .about-card p {
+    .card-interactive p {
       font-size: 0.9375rem;
       color: var(--muted);
       line-height: 1.55;
+    }
+
+    .card-hint {
+      margin-top: 14px;
+      font-size: 0.8125rem;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .card-interactive:hover .card-hint { opacity: 1; transform: translateY(0); }
+
+    .card-detail {
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      padding-top: 0;
+      margin-top: 0;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.35s ease, opacity 0.25s ease,
+                  padding-top 0.35s ease, margin-top 0.35s ease;
+    }
+
+    .card-interactive.expanded .card-detail {
+      max-height: 160px;
+      opacity: 1;
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+
+    .card-interactive.expanded .card-hint { display: none; }
+
+    .card-detail p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .portfolio-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(0, 113, 227, 0.08);
+      padding: 4px 10px;
+      border-radius: 980px;
     }
 
     /* ── Ownership section ── */
@@ -252,23 +315,15 @@
       color: #fff;
     }
 
-    .ownership .section-label {
-      color: #6ac4ff;
-    }
-
-    .ownership .section-title {
-      color: #fff;
-    }
-
-    .ownership .section-sub {
-      color: rgba(255, 255, 255, 0.55);
-    }
+    .ownership .section-label { color: #6ac4ff; }
+    .ownership .section-title { color: #fff; }
+    .ownership .section-sub { color: rgba(255, 255, 255, 0.55); }
 
     .pillars {
       display: grid;
       grid-template-columns: 1fr;
       gap: 2px;
-      max-width: 860px;
+      width: min(860px, 100%);
       margin: 0 auto;
       border-radius: 20px;
       overflow: hidden;
@@ -281,7 +336,13 @@
     .pillar {
       background: rgba(255, 255, 255, 0.05);
       padding: 32px 24px;
+      cursor: pointer;
+      transition: background 0.22s ease;
+      position: relative;
     }
+
+    .pillar:hover { background: rgba(255, 255, 255, 0.09); }
+    .pillar:active { background: rgba(255, 255, 255, 0.03); }
 
     .pillar-icon {
       font-size: 2rem;
@@ -297,15 +358,20 @@
       color: #fff;
     }
 
-    .pillar p {
+    .pillar > p {
       font-size: 0.9375rem;
       color: rgba(255, 255, 255, 0.5);
       line-height: 1.55;
     }
 
+    .pillar .card-hint { color: #6ac4ff; }
+    .pillar .card-detail { border-top-color: rgba(255,255,255,0.1); }
+    .pillar .card-detail p { color: rgba(255,255,255,0.45); }
+    .pillar .portfolio-tag { color: #6ac4ff; background: rgba(106,196,255,0.12); }
+
     /* ── How it works ── */
     .steps {
-      max-width: 640px;
+      width: min(640px, 100%);
       margin: 0 auto;
     }
 
@@ -318,9 +384,7 @@
       border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     }
 
-    .step:last-child {
-      border-bottom: none;
-    }
+    .step:last-child { border-bottom: none; }
 
     .step-num {
       width: 48px;
@@ -366,14 +430,8 @@
       border-top: 1px solid rgba(0, 0, 0, 0.06);
     }
 
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -401,20 +459,35 @@
     <p class="section-sub">Your personal AI companion, built to understand your context, your goals, and your voice.</p>
 
     <div class="about-grid">
-      <div class="about-card">
+      <div class="card-interactive" tabindex="0" role="button" aria-expanded="false">
         <span class="card-icon">🧠</span>
         <h3>Intelligent</h3>
         <p>Adapts to who you are, not who it thinks you should be.</p>
+        <span class="card-hint">Tap to learn more ›</span>
+        <div class="card-detail">
+          <p>The more you interact, the more precisely it understands what you're looking for — not just what you typed.</p>
+          <span class="portfolio-tag">📊 Usage insights · coming soon</span>
+        </div>
       </div>
-      <div class="about-card">
+      <div class="card-interactive" tabindex="0" role="button" aria-expanded="false">
         <span class="card-icon">🫵</span>
         <h3>Personal</h3>
         <p>Built around your goals, your voice, your story. Nothing generic.</p>
+        <span class="card-hint">Tap to learn more ›</span>
+        <div class="card-detail">
+          <p>Your goals and voice stay consistent across every conversation. No need to re-introduce yourself.</p>
+          <span class="portfolio-tag">📁 Your aime portfolio · coming soon</span>
+        </div>
       </div>
-      <div class="about-card">
+      <div class="card-interactive" tabindex="0" role="button" aria-expanded="false">
         <span class="card-icon">🔒</span>
         <h3>Yours</h3>
         <p>Everything lives on your device. No cloud, no servers listening in. Your thoughts stay yours.</p>
+        <span class="card-hint">Tap to learn more ›</span>
+        <div class="card-detail">
+          <p>Everything stored as plain files on your device. Open them, move them, delete them — they're just files.</p>
+          <span class="portfolio-tag">🗂️ Local data explorer · coming soon</span>
+        </div>
       </div>
     </div>
   </section>
@@ -426,20 +499,35 @@
     <p class="section-sub">Most AI sends your data to a company's server. Not here. It runs on your device and saves to your machine. End of story.</p>
 
     <div class="pillars">
-      <div class="pillar">
+      <div class="pillar card-interactive" tabindex="0" role="button" aria-expanded="false">
         <span class="pillar-icon">💻</span>
         <h3>Runs on your device</h3>
         <p>It works right on your computer. Nothing is sent out. Nothing is processed somewhere you can't see.</p>
+        <span class="card-hint">Tap to learn more ›</span>
+        <div class="card-detail">
+          <p>No internet required for day-to-day use. Works offline, in airplane mode, wherever you are.</p>
+          <span class="portfolio-tag">⚡ Performance stats · coming soon</span>
+        </div>
       </div>
-      <div class="pillar">
+      <div class="pillar card-interactive" tabindex="0" role="button" aria-expanded="false">
         <span class="pillar-icon">🗂️</span>
         <h3>Saved locally</h3>
         <p>Your conversations, goals, and history live on your machine, in a folder you can open, move, or delete anytime.</p>
+        <span class="card-hint">Tap to learn more ›</span>
+        <div class="card-detail">
+          <p>Files live in a folder you choose. Back them up your way, or keep them locked on one device.</p>
+          <span class="portfolio-tag">🔐 Backup options · coming soon</span>
+        </div>
       </div>
-      <div class="pillar">
+      <div class="pillar card-interactive" tabindex="0" role="button" aria-expanded="false">
         <span class="pillar-icon">✊</span>
         <h3>You own it, fully</h3>
         <p>No company holding your data. No profiles being built behind the scenes. What you share with aime belongs to you.</p>
+        <span class="card-hint">Tap to learn more ›</span>
+        <div class="card-detail">
+          <p>No terms of service that could change tomorrow. No company that could shut down. Yours indefinitely.</p>
+          <span class="portfolio-tag">🤝 Ownership docs · coming soon</span>
+        </div>
       </div>
     </div>
   </section>
@@ -485,8 +573,21 @@
 
   <footer>
     Questions? <a href="mailto:support@aime.fyi">support@aime.fyi</a>
-    &nbsp;&middot;&nbsp; &copy; 2026 aime
+    &nbsp;&middot;&nbsp; &copy; 2026 AIME, LLC.
   </footer>
+
+  <script>
+    document.querySelectorAll('.card-interactive').forEach(function(card) {
+      function toggle() {
+        var expanded = card.classList.toggle('expanded');
+        card.setAttribute('aria-expanded', expanded);
+      }
+      card.addEventListener('click', toggle);
+      card.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    });
+  </script>
 
 </body>
 </html>
