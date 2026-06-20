@@ -37,7 +37,7 @@
     }
 
     body {
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
       background: var(--bg);
       color: var(--ink);
       overflow-x: hidden;
@@ -490,9 +490,9 @@
     }
 
     .scan-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line-strong); }
-    .scan-bar-label { margin-left: 8px; font-size: 0.75rem; color: var(--muted-2); font-family: "JetBrains Mono", monospace; }
+    .scan-bar-label { margin-left: 8px; font-size: 0.75rem; color: var(--muted-2); font-family: SFMono-Regular, ui-monospace, Menlo, monospace; }
 
-    .scan-body { background: var(--bg); border-radius: 16px; padding: 22px; font-family: "JetBrains Mono", SFMono-Regular, monospace; font-size: 0.8125rem; line-height: 1.9; }
+    .scan-body { background: var(--bg); border-radius: 16px; padding: 22px; font-family: SFMono-Regular, ui-monospace, Menlo, monospace; font-size: 0.8125rem; line-height: 1.9; }
 
     .scan-line { color: var(--muted); display: flex; justify-content: space-between; gap: 12px; }
     .scan-line .ok { color: var(--accent-3); }
@@ -601,7 +601,7 @@
     }
 
     .tl-num {
-      font-family: "JetBrains Mono", monospace;
+      font-family: SFMono-Regular, ui-monospace, Menlo, monospace;
       font-size: 0.75rem;
       font-weight: 700;
       color: var(--accent-bright);
@@ -847,76 +847,100 @@
   </footer>
 
   <script>
-    // Nav background on scroll
-    var nav = document.getElementById('site-nav');
-    window.addEventListener('scroll', function() {
-      nav.classList.toggle('scrolled', window.scrollY > 8);
-    }, { passive: true });
-
-    // Expandable cards
-    document.querySelectorAll('.card').forEach(function(card) {
-      function toggle() {
-        var expanded = card.classList.toggle('expanded');
-        card.setAttribute('aria-expanded', expanded);
+    // Scroll reveal — must never permanently hide content. Runs in its own
+    // script block, first, so an unrelated error later in the page can't
+    // stop this from registering. Falls back to instantly visible if
+    // IntersectionObserver throws/is unsupported, and force-reveals
+    // everything after 3s no matter what as a last-resort safety net.
+    function revealAllNow() {
+      document.querySelectorAll('.reveal').forEach(function(el) { el.classList.add('in'); });
+    }
+    try {
+      if ('IntersectionObserver' in window) {
+        var revealObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
+      } else {
+        revealAllNow();
       }
-      card.addEventListener('click', toggle);
-      card.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-      });
-    });
+    } catch (e) {
+      revealAllNow();
+    }
+    setTimeout(revealAllNow, 3000);
+  </script>
 
-    // Scroll reveal
-    var revealObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in');
-          revealObserver.unobserve(entry.target);
+  <script>
+    try {
+      // Nav background on scroll
+      var nav = document.getElementById('site-nav');
+      window.addEventListener('scroll', function() {
+        nav.classList.toggle('scrolled', window.scrollY > 8);
+      }, { passive: true });
+
+      // Expandable cards
+      document.querySelectorAll('.card').forEach(function(card) {
+        function toggle() {
+          var expanded = card.classList.toggle('expanded');
+          card.setAttribute('aria-expanded', expanded);
         }
+        card.addEventListener('click', toggle);
+        card.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+        });
       });
-    }, { threshold: 0.15 });
-    document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
+    } catch (e) {}
 
     // Starfield canvas
-    (function() {
-      var canvas = document.getElementById('starfield');
-      var ctx = canvas.getContext('2d');
-      var stars = [];
-      var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    try {
+      (function() {
+        var canvas = document.getElementById('starfield');
+        var ctx = canvas.getContext('2d');
+        var stars = [];
+        var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = Math.min(window.innerHeight * 1.4, 1400);
-        var count = Math.floor((canvas.width * canvas.height) / 9000);
-        stars = [];
-        for (var i = 0; i < count; i++) {
-          stars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            r: Math.random() * 1.1 + 0.2,
-            a: Math.random() * 0.6 + 0.2,
-            speed: Math.random() * 0.012 + 0.004,
-            phase: Math.random() * Math.PI * 2
-          });
+        function resize() {
+          canvas.width = window.innerWidth;
+          canvas.height = Math.min(window.innerHeight * 1.4, 1400);
+          var count = Math.min(Math.floor((canvas.width * canvas.height) / 9000), 300);
+          stars = [];
+          for (var i = 0; i < count; i++) {
+            stars.push({
+              x: Math.random() * canvas.width,
+              y: Math.random() * canvas.height,
+              r: Math.random() * 1.1 + 0.2,
+              a: Math.random() * 0.6 + 0.2,
+              speed: Math.random() * 0.012 + 0.004,
+              phase: Math.random() * Math.PI * 2
+            });
+          }
         }
-      }
 
-      function draw(t) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (var i = 0; i < stars.length; i++) {
-          var s = stars[i];
-          var twinkle = prefersReducedMotion ? s.a : s.a * (0.6 + 0.4 * Math.sin(t * s.speed + s.phase));
-          ctx.beginPath();
-          ctx.fillStyle = 'rgba(255,255,255,' + twinkle.toFixed(3) + ')';
-          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-          ctx.fill();
+        function draw(t) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#fff';
+          for (var i = 0; i < stars.length; i++) {
+            var s = stars[i];
+            var twinkle = prefersReducedMotion ? s.a : s.a * (0.6 + 0.4 * Math.sin(t * s.speed + s.phase));
+            ctx.globalAlpha = twinkle;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.globalAlpha = 1;
+          if (!prefersReducedMotion) requestAnimationFrame(draw);
         }
-        if (!prefersReducedMotion) requestAnimationFrame(draw);
-      }
 
-      window.addEventListener('resize', resize, { passive: true });
-      resize();
-      requestAnimationFrame(draw);
-    })();
+        window.addEventListener('resize', resize, { passive: true });
+        resize();
+        requestAnimationFrame(draw);
+      })();
+    } catch (e) {}
   </script>
 
 </body>

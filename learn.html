@@ -32,7 +32,7 @@
     html { font-size: 16px; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; overflow-x: hidden; }
 
     body {
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
       background: var(--bg);
       color: var(--ink);
       overflow-x: hidden;
@@ -780,31 +780,52 @@
   </footer>
 
   <script>
-    var nav = document.getElementById('site-nav');
-    window.addEventListener('scroll', function() {
-      nav.classList.toggle('scrolled', window.scrollY > 8);
-    }, { passive: true });
-
-    document.querySelectorAll('.card').forEach(function(card) {
-      function toggle() {
-        var expanded = card.classList.toggle('expanded');
-        card.setAttribute('aria-expanded', expanded);
+    // Scroll reveal — must never permanently hide content. Runs in its own
+    // script block, first, so an unrelated error later in the page can't
+    // stop this from registering. Falls back to instantly visible if
+    // IntersectionObserver throws/is unsupported, and force-reveals
+    // everything after 3s no matter what as a last-resort safety net.
+    function revealAllNow() {
+      document.querySelectorAll('.reveal').forEach(function(el) { el.classList.add('in'); });
+    }
+    try {
+      if ('IntersectionObserver' in window) {
+        var revealObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
+      } else {
+        revealAllNow();
       }
-      card.addEventListener('click', toggle);
-      card.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-      });
-    });
+    } catch (e) {
+      revealAllNow();
+    }
+    setTimeout(revealAllNow, 3000);
+  </script>
 
-    var revealObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in');
-          revealObserver.unobserve(entry.target);
+  <script>
+    try {
+      var nav = document.getElementById('site-nav');
+      window.addEventListener('scroll', function() {
+        nav.classList.toggle('scrolled', window.scrollY > 8);
+      }, { passive: true });
+
+      document.querySelectorAll('.card').forEach(function(card) {
+        function toggle() {
+          var expanded = card.classList.toggle('expanded');
+          card.setAttribute('aria-expanded', expanded);
         }
+        card.addEventListener('click', toggle);
+        card.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+        });
       });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
+    } catch (e) {}
   </script>
 
 </body>
