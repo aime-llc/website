@@ -654,7 +654,11 @@
 
   <nav id="site-nav">
     <a class="nav-logo" href="index.html">aime</a>
-    <a class="nav-link" href="learn.html">Learn more</a>
+    <div style="display:flex;gap:28px;align-items:center;">
+      <a class="nav-link" href="learn.html">Learn</a>
+      <a class="nav-link" href="start.html">Get started</a>
+      <a class="nav-link" href="legal.html">Legal</a>
+    </div>
   </nav>
 
   <main>
@@ -807,6 +811,41 @@
       </div>
     </section>
 
+    <!-- Online when you say so -->
+    <section>
+      <p class="section-label reveal">your privacy</p>
+      <h2 class="section-title reveal">Online when you say so.<br>Offline by default.</h2>
+      <p class="section-sub reveal">Most AI is always connected, always sending. This one isn't. It lives on your device, and nothing leaves unless you ask it to.</p>
+
+      <div style="display:grid;grid-template-columns:1fr;gap:14px;max-width:680px;margin:0 auto;">
+        <style>
+          @media(min-width:560px){.inet-pair{grid-template-columns:1fr 1fr!important}}
+        </style>
+        <div class="inet-pair" style="display:grid;grid-template-columns:1fr;gap:14px;">
+          <div class="card reveal" tabindex="0" role="button" aria-expanded="false" style="text-align:left;">
+            <span class="card-icon">🔒</span>
+            <h3>Offline by default</h3>
+            <p>Nothing leaves your device unless you ask. No background syncing, no data collection, no profiles being built while you sleep.</p>
+            <span class="card-hint">Tap to learn more ›</span>
+            <div class="card-detail">
+              <p>Even the AI model itself runs locally. No API calls, no usage logs, no third-party involvement unless you want it.</p>
+              <span class="tag">🛡️ Privacy audit · coming soon</span>
+            </div>
+          </div>
+          <div class="card reveal" tabindex="0" role="button" aria-expanded="false" style="text-align:left;">
+            <span class="card-icon">🌐</span>
+            <h3>Online on request</h3>
+            <p>Need current info? Just ask. It'll search, summarize, and come right back. One request at a time, always your call.</p>
+            <span class="card-hint">Tap to learn more ›</span>
+            <div class="card-detail">
+              <p>You choose which searches are allowed, when, and for how long. Full transparency on every outbound request.</p>
+              <span class="tag">🌍 Network log · coming soon</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- How it works -->
     <section id="how">
       <p class="section-label reveal">how it works</p>
@@ -842,6 +881,9 @@
   </main>
 
   <footer>
+    <a href="learn.html">Learn</a> &nbsp;&middot;&nbsp;
+    <a href="start.html">Get started</a> &nbsp;&middot;&nbsp;
+    <a href="legal.html">Legal</a> &nbsp;&middot;&nbsp;
     Questions? <a href="mailto:support@aime.fyi">support@aime.fyi</a>
     &nbsp;&middot;&nbsp; &copy; 2026 AIME, LLC.
   </footer>
