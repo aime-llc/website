@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="See how aime works: local-first AI that scans your hardware, picks the right model, remembers your context, and never sends your data anywhere without asking." />
   <title>Learn more · aime</title>
   <style>
     *, *::before, *::after {
@@ -12,24 +13,43 @@
     }
 
     :root {
-      --ink: #1d1d1f;
-      --muted: #6e6e73;
-      --accent: #0071e3;
-      --bg: #ffffff;
-      --surface: #f5f5f7;
+      --bg: #050507;
+      --bg-raised: #0a0b10;
+      --surface: #0d0f16;
+      --surface-2: #12141d;
+      --ink: #f5f6f8;
+      --muted: #9296a3;
+      --muted-2: #5e616b;
+      --line: rgba(255, 255, 255, 0.09);
+      --line-strong: rgba(255, 255, 255, 0.16);
+      --accent: #4f8cff;
+      --accent-bright: #7fb0ff;
+      --accent-2: #8b7bff;
+      --accent-3: #38e1c6;
+      --gradient: linear-gradient(115deg, #4f8cff 0%, #8b7bff 50%, #38e1c6 100%);
     }
 
-    html {
-      font-size: 16px;
-      -webkit-font-smoothing: antialiased;
-      scroll-behavior: smooth;
-    }
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; overflow-x: hidden; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
       background: var(--bg);
       color: var(--ink);
+      overflow-x: hidden;
     }
+
+    a { color: inherit; }
+
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="120" height="120"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3"/%3E%3C/filter%3E%3Crect width="120" height="120" filter="url(%23n)"/%3E%3C/svg%3E');
+    }
+
+    main, nav, footer { position: relative; z-index: 2; }
 
     /* ── Nav ── */
     nav {
@@ -40,65 +60,63 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 24px;
-      height: 52px;
-      backdrop-filter: saturate(180%) blur(20px);
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-      background: rgba(255, 255, 255, 0.72);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      padding: 0 28px;
+      height: 64px;
+      background: rgba(5, 5, 7, 0.55);
+      backdrop-filter: saturate(160%) blur(16px);
+      -webkit-backdrop-filter: saturate(160%) blur(16px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease, background 0.3s ease;
     }
 
-    .nav-logo {
-      font-size: 0.9375rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      color: var(--ink);
-      text-decoration: none;
-    }
+    nav.scrolled { border-bottom-color: var(--line); background: rgba(5, 5, 7, 0.82); }
+
+    .nav-logo { font-size: 0.9375rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
 
     .nav-cta {
       display: inline-flex;
       align-items: center;
-      padding: 8px 18px;
-      background: var(--accent);
-      color: #fff;
-      font-size: 0.875rem;
-      font-weight: 500;
+      padding: 9px 20px;
+      background: #fff;
+      color: #050507;
+      font-size: 0.8125rem;
+      font-weight: 700;
       border-radius: 980px;
       text-decoration: none;
-      transition: opacity 0.2s ease;
+      transition: transform 0.2s ease;
     }
 
-    .nav-cta:hover { opacity: 0.85; }
+    .nav-cta:hover { transform: translateY(-1px); }
 
     /* ── Section shell ── */
-    section { padding: 64px 20px; }
-
-    @media (min-width: 768px) {
-      section { padding: 80px 24px; }
-    }
-
-    section[id] { scroll-margin-top: 72px; }
+    section { padding: 96px 20px; position: relative; }
+    section[id] { scroll-margin-top: 88px; }
 
     .eyebrow {
       text-align: center;
-      font-size: 0.8125rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.24em;
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 16px;
+      color: var(--accent-bright);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
+
+    .eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-3); box-shadow: 0 0 12px var(--accent-3); }
 
     .section-title {
       text-align: center;
-      font-size: clamp(1.625rem, 5vw, 2.75rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.15;
+      font-size: clamp(1.875rem, 5.2vw, 3.25rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
       color: var(--ink);
-      margin-bottom: 12px;
-      width: min(700px, 94%);
+      margin-bottom: 16px;
+      width: min(760px, 94%);
       margin-inline: auto;
     }
 
@@ -106,952 +124,655 @@
       text-align: center;
       font-size: 1.0625rem;
       color: var(--muted);
-      width: min(480px, 92%);
-      margin: 0 auto 48px;
+      width: min(500px, 92%);
+      margin: 0 auto 56px;
       line-height: 1.6;
     }
 
-    .surface { background: var(--surface); }
+    .surface { background: var(--bg-raised); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 
-    .dark {
-      background: var(--ink);
-      color: #fff;
-    }
-
-    .dark .eyebrow { color: #6ac4ff; }
-    .dark .section-title { color: #fff; }
-    .dark .section-sub { color: rgba(255, 255, 255, 0.55); }
+    /* ── Reveal ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
 
     /* ── Hero ── */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 120px 20px 72px;
-      gap: 20px;
+    .hero { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 150px 20px 90px; gap: 22px; position: relative; overflow: hidden; }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: min(900px, 140vw);
+      height: 700px;
+      transform: translateX(-50%);
+      background: radial-gradient(circle, rgba(79, 140, 255, 0.14), transparent 60%);
+      pointer-events: none;
+      z-index: -1;
     }
 
-    @media (min-width: 768px) {
-      .hero { padding: 148px 24px 96px; gap: 24px; }
-    }
+    h1 { font-size: clamp(2.75rem, 8.5vw, 5.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.02; color: var(--ink); }
 
-    h1 {
-      font-size: clamp(2.75rem, 9vw, 6rem);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 1.0;
-      color: var(--ink);
-    }
-
-    .tagline {
-      font-size: clamp(1rem, 2.5vw, 1.25rem);
-      color: var(--muted);
-      width: min(460px, 92%);
-      line-height: 1.6;
-    }
+    .tagline { font-size: clamp(1.0625rem, 2.3vw, 1.25rem); color: var(--muted); width: min(500px, 92%); line-height: 1.65; }
 
     .cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 14px 28px;
-      background: var(--accent);
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 500;
-      border-radius: 980px;
-      text-decoration: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      display: inline-flex; align-items: center; gap: 8px; padding: 15px 30px;
+      background: #fff; color: #050507; font-size: 0.9375rem; font-weight: 700;
+      border-radius: 980px; text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .cta:hover { opacity: 0.85; transform: scale(0.98); }
+    .cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,255,255,0.18); }
 
     .cta-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 14px 28px;
-      background: transparent;
-      color: var(--accent);
-      font-size: 1rem;
-      font-weight: 500;
-      border-radius: 980px;
-      text-decoration: none;
-      transition: background 0.2s ease;
+      display: inline-flex; align-items: center; gap: 8px; padding: 15px 30px;
+      background: transparent; color: var(--ink); font-size: 0.9375rem; font-weight: 600;
+      border-radius: 980px; border: 1px solid var(--line-strong); text-decoration: none;
+      transition: background 0.2s ease, border-color 0.2s ease;
     }
 
-    .cta-ghost:hover { background: var(--surface); }
+    .cta-ghost:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.3); }
 
-    .cta-group {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+    .cta-group { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
 
-    /* ── Interactive cards (shared) ── */
-    .card-interactive {
+    /* ── Cards (shared) ── */
+    .card {
       cursor: pointer;
       outline: none;
-      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  box-shadow 0.22s ease;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.25s ease, background 0.25s ease;
       position: relative;
+      background: var(--surface);
+      border: 1px solid var(--line);
     }
 
-    .card-interactive:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-interactive:active {
-      transform: scale(0.97);
-      transition-duration: 0.1s;
-    }
-
-    .card-interactive:focus-visible {
-      box-shadow: 0 0 0 3px var(--accent);
-    }
+    .card:hover { transform: translateY(-6px); border-color: var(--line-strong); background: var(--surface-2); }
+    .card:active { transform: scale(0.98); transition-duration: 0.1s; }
+    .card:focus-visible { box-shadow: 0 0 0 2px var(--accent); }
 
     .card-hint {
-      margin-top: 14px;
-      font-size: 0.8125rem;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      opacity: 0;
-      transform: translateY(4px);
+      margin-top: 16px; font-size: 0.8125rem; font-weight: 600; color: var(--accent-bright);
+      display: flex; align-items: center; gap: 4px; opacity: 0; transform: translateY(4px);
       transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
-    .card-interactive:hover .card-hint { opacity: 1; transform: translateY(0); }
+    .card:hover .card-hint { opacity: 1; transform: translateY(0); }
 
     .card-detail {
-      border-top: 1px solid rgba(0, 0, 0, 0.06);
-      padding-top: 0;
-      margin-top: 0;
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.35s ease, opacity 0.25s ease,
-                  padding-top 0.35s ease, margin-top 0.35s ease;
+      border-top: 1px solid var(--line); padding-top: 0; margin-top: 0; max-height: 0;
+      overflow: hidden; opacity: 0;
+      transition: max-height 0.35s ease, opacity 0.25s ease, padding-top 0.35s ease, margin-top 0.35s ease;
     }
 
-    .card-interactive.expanded .card-detail {
-      max-height: 180px;
-      opacity: 1;
-      padding-top: 14px;
-      margin-top: 14px;
-    }
+    .card.expanded .card-detail { max-height: 200px; opacity: 1; padding-top: 16px; margin-top: 16px; }
+    .card.expanded .card-hint { display: none; }
+    .card-detail p { font-size: 0.875rem; color: var(--muted-2); line-height: 1.6; margin-bottom: 10px; }
 
-    .card-interactive.expanded .card-hint { display: none; }
-
-    .card-detail p {
-      font-size: 0.875rem;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 10px;
-    }
-
-    .portfolio-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--accent);
-      background: rgba(0, 113, 227, 0.08);
-      padding: 4px 10px;
-      border-radius: 980px;
+    .tag {
+      display: inline-flex; align-items: center; gap: 5px; font-size: 0.75rem; font-weight: 600;
+      color: var(--accent-bright); background: rgba(79, 140, 255, 0.1); padding: 5px 11px; border-radius: 980px;
     }
 
     /* ── Capabilities grid ── */
-    .caps-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      width: min(860px, 100%);
-      margin: 0 auto;
-    }
+    .caps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: min(960px, 100%); margin: 0 auto; }
+    @media (min-width: 640px) { .caps-grid { grid-template-columns: repeat(3, 1fr); } }
 
-    @media (min-width: 640px) {
-      .caps-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-
-    .cap-card {
-      background: var(--bg);
-      border-radius: 18px;
-      padding: 24px 20px;
-    }
+    .cap-card { border-radius: 18px; padding: 28px 22px; }
 
     .cap-icon {
-      font-size: 2rem;
-      margin-bottom: 10px;
-      display: block;
+      width: 40px; height: 40px; border-radius: 11px; background: rgba(79, 140, 255, 0.12);
+      display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 16px;
     }
 
-    .cap-card h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      margin-bottom: 6px;
-      color: var(--ink);
-    }
+    .cap-card h3 { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 7px; color: var(--ink); }
+    .cap-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.55; }
 
-    .cap-card p {
-      font-size: 0.875rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
+    /* ── Audience grid ── */
+    .audience-grid { display: grid; grid-template-columns: 1fr; gap: 16px; width: min(960px, 100%); margin: 0 auto; }
+    @media (min-width: 640px) { .audience-grid { grid-template-columns: 1fr 1fr; } }
 
-    /* ── Audience cards ── */
-    .audience-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      width: min(860px, 100%);
-      margin: 0 auto;
-    }
-
-    @media (min-width: 600px) {
-      .audience-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    .aud-card {
-      background: var(--surface);
-      border-radius: 20px;
-      padding: 32px 28px;
-    }
+    .aud-card { border-radius: 20px; padding: 34px 30px; }
 
     .aud-icon {
-      font-size: 2.25rem;
-      margin-bottom: 14px;
-      display: block;
+      width: 46px; height: 46px; border-radius: 13px; background: rgba(139, 123, 255, 0.12);
+      display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 18px;
     }
 
-    .aud-card h3 {
-      font-size: 1.125rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 10px;
-      color: var(--ink);
-    }
-
-    .aud-card > p {
-      font-size: 0.9375rem;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 18px;
-    }
+    .aud-card h3 { font-size: 1.1875rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 11px; color: var(--ink); }
+    .aud-card > p { font-size: 0.9375rem; color: var(--muted); line-height: 1.65; margin-bottom: 18px; }
 
     .aud-tag {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--accent);
-      background: rgba(0, 113, 227, 0.08);
-      padding: 4px 10px;
-      border-radius: 980px;
+      display: inline-block; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--accent-bright); background: rgba(79, 140, 255, 0.1); padding: 5px 11px; border-radius: 980px;
     }
 
-    /* ── Internet pillars ── */
-    .internet-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      width: min(700px, 100%);
-      margin: 0 auto;
-    }
+    /* ── Internet/privacy pillars ── */
+    .internet-grid { display: grid; grid-template-columns: 1fr; gap: 14px; width: min(800px, 100%); margin: 0 auto; }
+    @media (min-width: 560px) { .internet-grid { grid-template-columns: 1fr 1fr; } }
 
-    @media (min-width: 560px) {
-      .internet-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    .inet-card {
-      background: rgba(255, 255, 255, 0.07);
-      border-radius: 20px;
-      padding: 32px 24px;
-    }
-
-    .inet-card.card-interactive:hover {
-      background: rgba(255, 255, 255, 0.11);
-    }
-
-    .dark .card-hint { color: #6ac4ff; }
-    .dark .card-detail { border-top-color: rgba(255,255,255,0.1); }
-    .dark .card-detail p { color: rgba(255,255,255,0.45); }
-    .dark .portfolio-tag { color: #6ac4ff; background: rgba(106,196,255,0.12); }
+    .inet-card { border-radius: 20px; padding: 34px 28px; }
 
     .inet-icon {
-      font-size: 2.25rem;
-      margin-bottom: 14px;
-      display: block;
+      width: 46px; height: 46px; border-radius: 13px; background: rgba(56, 225, 198, 0.12);
+      display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 18px;
     }
 
-    .inet-card h3 {
-      font-size: 1.0625rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
-      color: #fff;
+    .inet-card h3 { font-size: 1.0625rem; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 9px; color: var(--ink); }
+    .inet-card > p { font-size: 0.9375rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── Teacher timeline ── */
+    .timeline { width: min(680px, 100%); margin: 0 auto; position: relative; padding-left: 44px; }
+
+    .timeline::before {
+      content: ''; position: absolute; left: 17px; top: 8px; bottom: 8px; width: 1px;
+      background: linear-gradient(to bottom, var(--line-strong), var(--line) 90%, transparent);
     }
 
-    .inet-card > p {
-      font-size: 0.9375rem;
-      color: rgba(255, 255, 255, 0.5);
-      line-height: 1.55;
+    .tl-step { position: relative; padding: 0 0 40px; }
+    .tl-step:last-child { padding-bottom: 0; }
+
+    .tl-step::before {
+      content: ''; position: absolute; left: -44px; top: 2px; width: 12px; height: 12px; border-radius: 50%;
+      background: var(--bg); border: 2px solid var(--accent); box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.12);
     }
 
-    /* ── Teacher steps ── */
-    .steps {
-      width: min(640px, 100%);
-      margin: 0 auto;
-    }
-
-    .step {
-      display: grid;
-      grid-template-columns: 52px 1fr;
-      gap: 16px;
-      align-items: start;
-      padding: 24px 0;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    }
-
-    .step:last-child { border-bottom: none; }
-
-    .step-emoji {
-      font-size: 1.75rem;
-      padding-top: 2px;
-      text-align: center;
-    }
-
-    .step h3 {
-      font-size: 1.0625rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 6px;
-      color: var(--ink);
-      padding-top: 4px;
-    }
-
-    .step p {
-      font-size: 0.9375rem;
-      color: var(--muted);
-      line-height: 1.55;
-    }
+    .tl-icon { font-size: 1.125rem; margin-bottom: 6px; display: block; }
+    .tl-step h3 { font-size: 1.0625rem; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 7px; color: var(--ink); }
+    .tl-step p { font-size: 0.9375rem; color: var(--muted); line-height: 1.6; }
 
     /* ── Demo section ── */
     .demo-shell {
-      width: min(680px, 100%);
-      margin: 0 auto;
-      background: var(--surface);
-      border-radius: 24px;
-      padding: 4px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      width: min(700px, 100%); margin: 0 auto; background: var(--surface);
+      border: 1px solid var(--line); border-radius: 22px; padding: 4px;
+      box-shadow: 0 30px 80px -30px rgba(79, 140, 255, 0.2);
     }
 
     .demo-shell input[type="radio"] { display: none; }
 
-    .demo-tabs-row {
-      display: flex;
-      padding: 4px;
-      gap: 4px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-
+    .demo-tabs-row { display: flex; padding: 4px; gap: 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
     .demo-tabs-row::-webkit-scrollbar { display: none; }
 
     .demo-tab {
-      flex: 1;
-      min-width: max-content;
-      text-align: center;
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-size: 0.8125rem;
-      font-weight: 500;
-      color: var(--muted);
-      cursor: pointer;
-      white-space: nowrap;
-      transition: color 0.18s ease, background 0.18s ease;
-      user-select: none;
+      flex: 1; min-width: max-content; text-align: center; padding: 10px 14px; border-radius: 11px;
+      font-size: 0.8125rem; font-weight: 600; color: var(--muted); cursor: pointer; white-space: nowrap;
+      transition: color 0.18s ease, background 0.18s ease; user-select: none;
     }
 
-    .demo-tab:hover { color: var(--ink); background: rgba(0,0,0,0.04); }
+    .demo-tab:hover { color: var(--ink); background: rgba(255,255,255,0.04); }
 
-    /* Active tab highlight via sibling selectors */
     #dt1:checked ~ .demo-tabs-row label[for="dt1"],
     #dt2:checked ~ .demo-tabs-row label[for="dt2"],
     #dt3:checked ~ .demo-tabs-row label[for="dt3"],
     #dt4:checked ~ .demo-tabs-row label[for="dt4"] {
-      color: var(--accent);
-      background: rgba(0, 113, 227, 0.1);
-      font-weight: 600;
+      color: var(--accent-bright); background: rgba(79, 140, 255, 0.12); font-weight: 700;
     }
 
-    .demo-panels {
-      background: var(--bg);
-      border-radius: 20px;
-      padding: 28px 24px;
-      min-height: 300px;
-    }
+    .demo-panels { background: var(--bg); border-radius: 18px; padding: 28px 24px; min-height: 300px; }
 
     .dp { display: none; }
-
     #dt1:checked ~ .demo-panels .dp1,
     #dt2:checked ~ .demo-panels .dp2,
     #dt3:checked ~ .demo-panels .dp3,
-    #dt4:checked ~ .demo-panels .dp4 {
-      display: block;
-      animation: fadeUp 0.28s ease forwards;
-    }
+    #dt4:checked ~ .demo-panels .dp4 { display: block; animation: fadeUp 0.28s ease forwards; }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Chat bubbles */
     .chat-wrap { display: flex; flex-direction: column; gap: 12px; }
 
-    .bubble-user {
-      align-self: flex-end;
-      background: var(--accent);
-      color: #fff;
-      border-radius: 18px 18px 4px 18px;
-      padding: 14px 18px;
-      width: min(340px, 88%);
-    }
+    .bubble-user { align-self: flex-end; background: var(--accent); color: #fff; border-radius: 18px 18px 4px 18px; padding: 14px 18px; width: min(340px, 88%); }
+    .bubble-aime { align-self: flex-start; background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); border-radius: 18px 18px 18px 4px; padding: 14px 18px; width: min(440px, 96%); }
 
-    .bubble-aime {
-      align-self: flex-start;
-      background: var(--surface);
-      color: var(--ink);
-      border-radius: 18px 18px 18px 4px;
-      padding: 14px 18px;
-      width: min(420px, 96%);
-    }
-
-    .bubble-who {
-      font-size: 0.6875rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      opacity: 0.55;
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    .bubble-user .bubble-who { color: rgba(255,255,255,0.7); }
-    .bubble-aime .bubble-who { color: var(--muted); }
+    .bubble-who { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.6; margin-bottom: 6px; display: block; }
+    .bubble-user .bubble-who { color: rgba(255,255,255,0.75); }
+    .bubble-aime .bubble-who { color: var(--accent-bright); }
 
     .bubble-user p { font-size: 0.9375rem; line-height: 1.5; }
-
-    .bubble-aime p {
-      font-size: 0.875rem;
-      line-height: 1.6;
-      color: var(--ink);
-      margin-bottom: 8px;
-    }
-
+    .bubble-aime p { font-size: 0.875rem; line-height: 1.6; color: var(--ink); margin-bottom: 8px; }
     .bubble-aime p:last-child { margin-bottom: 0; }
-    .bubble-aime strong { color: var(--ink); font-weight: 600; }
+    .bubble-aime strong { color: var(--accent-bright); font-weight: 600; }
 
-    .demo-note {
-      margin-top: 16px;
-      font-size: 0.8125rem;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.5;
-    }
+    .demo-note { margin-top: 16px; font-size: 0.8125rem; color: var(--muted-2); text-align: center; line-height: 1.5; }
 
-    /* Context panel */
-    .context-card {
-      background: var(--surface);
-      border-radius: 16px;
-      padding: 20px;
-    }
+    .context-card { background: var(--surface-2); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+    .context-title { font-size: 0.9375rem; font-weight: 700; color: var(--ink); margin-bottom: 14px; }
+    .context-items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .context-item { font-size: 0.875rem; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; line-height: 1.4; }
+    .context-privacy { font-size: 0.8125rem; font-weight: 700; color: var(--accent-3); margin-bottom: 4px; }
+    .context-sub { font-size: 0.8125rem; color: var(--muted-2); }
 
-    .context-title {
-      font-size: 0.9375rem;
-      font-weight: 700;
-      color: var(--ink);
-      margin-bottom: 14px;
-    }
-
-    .context-items {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .context-item {
-      font-size: 0.875rem;
-      color: var(--ink);
-      background: var(--bg);
-      border-radius: 10px;
-      padding: 10px 12px;
-      line-height: 1.4;
-    }
-
-    .context-privacy {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 4px;
-    }
-
-    .context-sub {
-      font-size: 0.8125rem;
-      color: var(--muted);
-    }
-
-    /* Guide panel */
     .guide-card { display: flex; flex-direction: column; gap: 12px; }
-
-    .guide-title {
-      font-size: 0.9375rem;
-      font-weight: 700;
-      color: var(--ink);
-    }
-
+    .guide-title { font-size: 0.9375rem; font-weight: 700; color: var(--ink); }
     .guide-steps { display: flex; flex-direction: column; gap: 10px; }
-
-    .guide-step {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      font-size: 0.875rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
+    .guide-step { display: flex; gap: 10px; align-items: flex-start; font-size: 0.875rem; color: var(--muted); line-height: 1.5; }
 
     .gs-num {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--surface);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--accent);
-      flex-shrink: 0;
-      margin-top: 1px;
+      width: 22px; height: 22px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;
+      color: var(--accent-bright); flex-shrink: 0; margin-top: 1px;
     }
 
     .guide-quote {
-      font-size: 0.9375rem;
-      color: var(--ink);
-      font-style: italic;
-      border-left: 3px solid var(--accent);
-      padding-left: 12px;
-      margin-top: 4px;
-      line-height: 1.5;
+      font-size: 0.9375rem; color: var(--ink); font-style: italic; border-left: 2px solid var(--accent);
+      padding-left: 14px; margin-top: 4px; line-height: 1.55;
     }
 
     /* ── FAQ ── */
-    .faq {
-      width: min(660px, 100%);
-      margin: 0 auto;
-    }
+    .faq { width: min(680px, 100%); margin: 0 auto; }
 
-    details {
-      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
-      padding: 20px 0;
-    }
-
+    details { border-bottom: 1px solid var(--line); padding: 22px 0; }
     details:last-child { border-bottom: none; }
 
     summary {
-      font-size: 1.0625rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: var(--ink);
-      gap: 12px;
+      font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.01em; cursor: pointer; list-style: none;
+      display: flex; justify-content: space-between; align-items: center; color: var(--ink); gap: 12px;
     }
 
     summary::-webkit-details-marker { display: none; }
 
-    summary::after {
-      content: '+';
-      font-size: 1.375rem;
-      font-weight: 300;
-      color: var(--accent);
-      flex-shrink: 0;
-      line-height: 1;
-    }
-
+    summary::after { content: '+'; font-size: 1.5rem; font-weight: 300; color: var(--accent-bright); flex-shrink: 0; line-height: 1; }
     details[open] summary::after { content: '−'; }
 
-    .faq-answer {
-      margin-top: 14px;
-      font-size: 0.9375rem;
-      color: var(--muted);
-      line-height: 1.65;
-    }
+    .faq-answer { margin-top: 14px; font-size: 0.9375rem; color: var(--muted); line-height: 1.65; }
 
     /* ── CTA section ── */
-    .cta-section { text-align: center; }
+    .cta-section { text-align: center; background: var(--bg-raised); border-top: 1px solid var(--line); position: relative; overflow: hidden; }
 
-    /* ── Footer ── */
-    footer {
-      text-align: center;
-      padding: 24px;
-      font-size: 0.8125rem;
-      color: var(--muted);
-      border-top: 1px solid rgba(0, 0, 0, 0.06);
+    .cta-section::before {
+      content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 1100px; height: 500px; background: radial-gradient(circle, rgba(139, 123, 255, 0.16), transparent 65%);
+      pointer-events: none;
     }
 
-    footer a { color: var(--accent); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
+    /* ── Footer ── */
+    footer { text-align: center; padding: 32px 24px; font-size: 0.8125rem; color: var(--muted-2); border-top: 1px solid var(--line); }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--ink); }
   </style>
 </head>
 <body>
 
-  <nav>
+  <div class="noise-overlay"></div>
+
+  <nav id="site-nav">
     <a class="nav-logo" href="index.html">aime</a>
     <a class="nav-cta" href="mailto:support@aime.fyi">Get started</a>
   </nav>
 
-  <!-- Hero -->
-  <section class="hero">
-    <p class="eyebrow">learn more</p>
-    <h1>Smart help.<br>No strings.</h1>
-    <p class="tagline">Whether you're building a business, picking up something new, or just want reliable assistance, this is where it starts.</p>
-    <div class="cta-group">
-      <a class="cta" href="mailto:support@aime.fyi">Get early access &rarr;</a>
-      <a class="cta-ghost" href="index.html">&larr; Back home</a>
-    </div>
-  </section>
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <p class="eyebrow">learn more</p>
+      <h1>Smart help.<br>No strings.</h1>
+      <p class="tagline">Whether you're building a business, picking up something new, or just want reliable assistance, this is where it starts.</p>
+      <div class="cta-group">
+        <a class="cta" href="mailto:support@aime.fyi">Get early access &rarr;</a>
+        <a class="cta-ghost" href="index.html">&larr; Back home</a>
+      </div>
+    </section>
 
-  <!-- Capabilities -->
-  <section class="surface">
-    <p class="eyebrow">capabilities</p>
-    <h2 class="section-title">More than a chatbot 💬</h2>
-    <p class="section-sub">Think of it as a thinking partner that actually learns who you are and what you need.</p>
+    <!-- Capabilities -->
+    <section class="surface">
+      <p class="eyebrow reveal">capabilities</p>
+      <h2 class="section-title reveal">More than a chatbot</h2>
+      <p class="section-sub reveal">Think of it as a thinking partner that actually learns who you are and what you need.</p>
 
-    <div class="caps-grid">
-      <div class="cap-card card-interactive" tabindex="0" role="button" aria-expanded="false">
-        <span class="cap-icon">🧠</span>
-        <h3>Learns with you</h3>
-        <p>Ask it to explain anything. It teaches, not just tells.</p>
-        <span class="card-hint">Tap to expand ›</span>
-        <div class="card-detail">
-          <p>Over time it picks up how you learn best: detailed breakdowns, quick summaries, or examples first.</p>
-          <span class="portfolio-tag">📈 Learning log · coming soon</span>
+      <div class="caps-grid">
+        <div class="cap-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="cap-icon">🧠</span>
+          <h3>Learns with you</h3>
+          <p>Ask it to explain anything. It teaches, not just tells.</p>
+          <span class="card-hint">Tap to expand ›</span>
+          <div class="card-detail">
+            <p>Over time it picks up how you learn best: detailed breakdowns, quick summaries, or examples first.</p>
+            <span class="tag">📈 Learning log · coming soon</span>
+          </div>
+        </div>
+        <div class="cap-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="cap-icon">✍️</span>
+          <h3>Helps you write</h3>
+          <p>Drafts, edits, summaries. From quick emails to full documents.</p>
+          <span class="card-hint">Tap to expand ›</span>
+          <div class="card-detail">
+            <p>It learns your tone and writing style, so drafts actually sound like you and not like a template.</p>
+            <span class="tag">📝 Writing history · coming soon</span>
+          </div>
+        </div>
+        <div class="cap-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="cap-icon">📋</span>
+          <h3>Organizes your thinking</h3>
+          <p>Plans, outlines, to-do lists. Turns scattered thoughts into clarity.</p>
+          <span class="card-hint">Tap to expand ›</span>
+          <div class="card-detail">
+            <p>Great at untangling big messy problems into something you can actually act on.</p>
+            <span class="tag">📌 Project board · coming soon</span>
+          </div>
+        </div>
+        <div class="cap-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="cap-icon">💡</span>
+          <h3>Answers questions</h3>
+          <p>From quick facts to deep, nuanced thinking. Ask it anything.</p>
+          <span class="card-hint">Tap to expand ›</span>
+          <div class="card-detail">
+            <p>It knows when to give a fast answer and when to slow down and think out loud with you.</p>
+            <span class="tag">🔍 Q&amp;A archive · coming soon</span>
+          </div>
+        </div>
+        <div class="cap-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="cap-icon">🔧</span>
+          <h3>Adapts to you</h3>
+          <p>Configure it to match your workflow, your style, your preferences.</p>
+          <span class="card-hint">Tap to expand ›</span>
+          <div class="card-detail">
+            <p>Power users can configure it deeply. Everyone else just tells it what they like and it adjusts.</p>
+            <span class="tag">⚙️ Settings explorer · coming soon</span>
+          </div>
+        </div>
+        <div class="cap-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="cap-icon">📈</span>
+          <h3>Grows with you</h3>
+          <p>The more you use it, the better it understands what you actually need.</p>
+          <span class="card-hint">Tap to expand ›</span>
+          <div class="card-detail">
+            <p>It builds context across every conversation, so no need to re-explain who you are or what you're working on.</p>
+            <span class="tag">🪴 Growth timeline · coming soon</span>
+          </div>
         </div>
       </div>
-      <div class="cap-card card-interactive" tabindex="0" role="button" aria-expanded="false">
-        <span class="cap-icon">✍️</span>
-        <h3>Helps you write</h3>
-        <p>Drafts, edits, summaries. From quick emails to full documents.</p>
-        <span class="card-hint">Tap to expand ›</span>
-        <div class="card-detail">
-          <p>It learns your tone and writing style, so drafts actually sound like you and not like a template.</p>
-          <span class="portfolio-tag">📝 Writing history · coming soon</span>
-        </div>
-      </div>
-      <div class="cap-card card-interactive" tabindex="0" role="button" aria-expanded="false">
-        <span class="cap-icon">📋</span>
-        <h3>Organizes your thinking</h3>
-        <p>Plans, outlines, to-do lists. Turns scattered thoughts into clarity.</p>
-        <span class="card-hint">Tap to expand ›</span>
-        <div class="card-detail">
-          <p>Great at untangling big messy problems into something you can actually act on.</p>
-          <span class="portfolio-tag">📌 Project board · coming soon</span>
-        </div>
-      </div>
-      <div class="cap-card card-interactive" tabindex="0" role="button" aria-expanded="false">
-        <span class="cap-icon">💡</span>
-        <h3>Answers questions</h3>
-        <p>From quick facts to deep, nuanced thinking. Ask it anything.</p>
-        <span class="card-hint">Tap to expand ›</span>
-        <div class="card-detail">
-          <p>It knows when to give a fast answer and when to slow down and think out loud with you.</p>
-          <span class="portfolio-tag">🔍 Q&amp;A archive · coming soon</span>
-        </div>
-      </div>
-      <div class="cap-card card-interactive" tabindex="0" role="button" aria-expanded="false">
-        <span class="cap-icon">🔧</span>
-        <h3>Adapts to you</h3>
-        <p>Configure it to match your workflow, your style, your preferences.</p>
-        <span class="card-hint">Tap to expand ›</span>
-        <div class="card-detail">
-          <p>Power users can configure it deeply. Everyone else just tells it what they like and it adjusts.</p>
-          <span class="portfolio-tag">⚙️ Settings explorer · coming soon</span>
-        </div>
-      </div>
-      <div class="cap-card card-interactive" tabindex="0" role="button" aria-expanded="false">
-        <span class="cap-icon">📈</span>
-        <h3>Grows with you</h3>
-        <p>The more you use it, the better it understands what you actually need.</p>
-        <span class="card-hint">Tap to expand ›</span>
-        <div class="card-detail">
-          <p>It builds context across every conversation, so no need to re-explain who you are or what you're working on.</p>
-          <span class="portfolio-tag">🪴 Growth timeline · coming soon</span>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Who it's for -->
-  <section>
-    <p class="eyebrow">built for everyone</p>
-    <h2 class="section-title">Find yourself here 👇</h2>
-    <p class="section-sub">It works differently for different people. See which one sounds like you.</p>
+    <!-- Who it's for -->
+    <section>
+      <p class="eyebrow reveal">built for everyone</p>
+      <h2 class="section-title reveal">Find yourself here</h2>
+      <p class="section-sub reveal">It works differently for different people. See which one sounds like you.</p>
 
-    <div class="audience-grid">
-      <div class="aud-card card-interactive" tabindex="0" role="button" aria-expanded="false">
-        <span class="aud-icon">🔧</span>
-        <h3>Engineers &amp; developers</h3>
-        <p>You know how to configure things. Here, the keys are yours. Run it your way, hook it into your workflow, and extend it however you like. It's a powerful foundation you build on top of.</p>
-        <span class="aud-tag">Deep configuration available</span>
-        <div class="card-detail">
-          <p>Local model swaps, API hooks, custom memory formats: all on the roadmap. Early access users help shape what ships first.</p>
-          <span class="portfolio-tag">🛠️ Dev toolkit · coming soon</span>
+      <div class="audience-grid">
+        <div class="aud-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="aud-icon">🔧</span>
+          <h3>Engineers &amp; developers</h3>
+          <p>You know how to configure things. Here, the keys are yours. Run it your way, hook it into your workflow, and extend it however you like. It's a powerful foundation you build on top of.</p>
+          <span class="aud-tag">Deep configuration available</span>
+          <div class="card-detail">
+            <p>Local model swaps, API hooks, custom memory formats: all on the roadmap. Early access users help shape what ships first.</p>
+            <span class="tag">🛠️ Dev toolkit · coming soon</span>
+          </div>
+        </div>
+        <div class="aud-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="aud-icon">⚡</span>
+          <h3>Busy business owners</h3>
+          <p>No time for a learning curve. This gets to the point, handles the repetitive stuff, and helps you make faster decisions. Set it up once, then let it work quietly in the background.</p>
+          <span class="aud-tag">Fast setup. Immediate value.</span>
+          <div class="card-detail">
+            <p>Client prep, email drafts, meeting summaries. The tasks that eat your afternoon, handled in minutes.</p>
+            <span class="tag">📊 Business dashboard · coming soon</span>
+          </div>
+        </div>
+        <div class="aud-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="aud-icon">🏗️</span>
+          <h3>Hands-on builders</h3>
+          <p>You want to understand every piece. It walks you through it, explains as you go, and builds alongside you. Ask questions. Challenge it. Learn as you build something real.</p>
+          <span class="aud-tag">Learn as you go</span>
+          <div class="card-detail">
+            <p>It's patient, thorough, and never makes you feel behind. Build at whatever pace makes sense for you.</p>
+            <span class="tag">🧱 Build log · coming soon</span>
+          </div>
+        </div>
+        <div class="aud-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="aud-icon">🌱</span>
+          <h3>Individuals</h3>
+          <p>Just want more capable assistance in your daily life? Goals, learning, writing, planning, and anything in between. No technical background needed. Just start talking.</p>
+          <span class="aud-tag">No setup needed</span>
+          <div class="card-detail">
+            <p>Personal goals, journaling, habit tracking, life planning. Your data, your pace, entirely yours.</p>
+            <span class="tag">🌟 Personal dashboard · coming soon</span>
+          </div>
         </div>
       </div>
-      <div class="aud-card card-interactive" tabindex="0" role="button" aria-expanded="false">
-        <span class="aud-icon">⚡</span>
-        <h3>Busy business owners</h3>
-        <p>No time for a learning curve. This gets to the point, handles the repetitive stuff, and helps you make faster decisions. Set it up once, then let it work quietly in the background.</p>
-        <span class="aud-tag">Fast setup. Immediate value.</span>
-        <div class="card-detail">
-          <p>Client prep, email drafts, meeting summaries. The tasks that eat your afternoon, handled in minutes.</p>
-          <span class="portfolio-tag">📊 Business dashboard · coming soon</span>
-        </div>
-      </div>
-      <div class="aud-card card-interactive" tabindex="0" role="button" aria-expanded="false">
-        <span class="aud-icon">🏗️</span>
-        <h3>Hands-on builders</h3>
-        <p>You want to understand every piece. It walks you through it, explains as you go, and builds alongside you. Ask questions. Challenge it. Learn as you build something real.</p>
-        <span class="aud-tag">Learn as you go</span>
-        <div class="card-detail">
-          <p>It's patient, thorough, and never makes you feel behind. Build at whatever pace makes sense for you.</p>
-          <span class="portfolio-tag">🧱 Build log · coming soon</span>
-        </div>
-      </div>
-      <div class="aud-card card-interactive" tabindex="0" role="button" aria-expanded="false">
-        <span class="aud-icon">🌱</span>
-        <h3>Individuals</h3>
-        <p>Just want more capable assistance in your daily life? Goals, learning, writing, planning, and anything in between. No technical background needed. Just start talking.</p>
-        <span class="aud-tag">No setup needed</span>
-        <div class="card-detail">
-          <p>Personal goals, journaling, habit tracking, life planning. Your data, your pace, entirely yours.</p>
-          <span class="portfolio-tag">🌟 Personal dashboard · coming soon</span>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Internet on your terms -->
-  <section class="dark">
-    <p class="eyebrow">your privacy</p>
-    <h2 class="section-title">Online when you say so.<br>Offline by default. 🔒</h2>
-    <p class="section-sub">Most AI is always connected, always sending. This one isn't. It lives on your device, and nothing leaves unless you ask it to.</p>
+    <!-- Cookbook deep-dive -->
+    <section id="cookbook">
+      <p class="eyebrow reveal">under the hood</p>
+      <h2 class="section-title reveal">The Cookbook, for the technical reader</h2>
+      <p class="section-sub reveal">How aime turns "what can my machine run?" into a ranked, one-click answer.</p>
 
-    <div class="internet-grid">
-      <div class="inet-card card-interactive" tabindex="0" role="button" aria-expanded="false">
-        <span class="inet-icon">🔒</span>
-        <h3>Offline by default</h3>
-        <p>Nothing leaves your device unless you ask. No background syncing, no data collection, no profiles being built while you sleep.</p>
-        <div class="card-detail">
-          <p>Even the AI model itself runs locally. No API calls, no usage logs, no third-party involvement unless you want it.</p>
-          <span class="portfolio-tag">🛡️ Privacy audit · coming soon</span>
+      <div class="caps-grid">
+        <div class="cap-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="cap-icon">🩻</span>
+          <h3>Hardware probe</h3>
+          <p>Reads CPU, unified/VRAM memory, and GPU backend (Metal, CUDA, ROCm) directly from the host — no manual spec entry.</p>
+          <span class="card-hint">Tap to expand ›</span>
+          <div class="card-detail">
+            <p>Detects Apple Silicon, NVIDIA, and AMD GPUs and picks the matching backend: llama.cpp/Metal, vLLM/CUDA, or ROCm.</p>
+          </div>
+        </div>
+        <div class="cap-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="cap-icon">📐</span>
+          <h3>Fit ranking</h3>
+          <p>Every candidate model is scored against your real RAM/VRAM headroom, not a vendor's minimum-spec sheet.</p>
+          <span class="card-hint">Tap to expand ›</span>
+          <div class="card-detail">
+            <p>GGUF quantizations are ranked by quality-per-byte for your exact memory budget, so you're not stuck guessing between Q4 and Q8.</p>
+          </div>
+        </div>
+        <div class="cap-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="cap-icon">⬇️</span>
+          <h3>Download &amp; serve</h3>
+          <p>One click pulls the model and starts serving it — Ollama, llama.cpp, or vLLM, whichever fits your hardware.</p>
+          <span class="card-hint">Tap to expand ›</span>
+          <div class="card-detail">
+            <p>Swap models without restarting your session. aime keeps the serving process alive and routes new chats to whatever's running.</p>
+          </div>
+        </div>
+        <div class="cap-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="cap-icon">⚖️</span>
+          <h3>Blind compare</h3>
+          <p>Run two or more models side by side on the same prompt, labels hidden, and pick the response you actually prefer.</p>
+          <span class="card-hint">Tap to expand ›</span>
+          <div class="card-detail">
+            <p>Useful for deciding between a faster small model and a slower, sharper one — let the output decide, not the spec sheet.</p>
+          </div>
+        </div>
+        <div class="cap-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="cap-icon">🔌</span>
+          <h3>Local or API</h3>
+          <p>Mix local models with Ollama, OpenRouter, OpenAI, or Anthropic endpoints — same picker, same workflow.</p>
+          <span class="card-hint">Tap to expand ›</span>
+          <div class="card-detail">
+            <p>Keep sensitive work fully local and reach for a hosted model only when you choose to. Nothing switches without you asking.</p>
+          </div>
+        </div>
+        <div class="cap-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="cap-icon">🔄</span>
+          <h3>Re-scans as you upgrade</h3>
+          <p>Add a GPU or more RAM, and the next scan picks it up — the recommendations move with your hardware.</p>
+          <span class="card-hint">Tap to expand ›</span>
+          <div class="card-detail">
+            <p>No reinstall, no reconfiguration. The fit ranking just reflects whatever's plugged in at scan time.</p>
+          </div>
         </div>
       </div>
-      <div class="inet-card card-interactive" tabindex="0" role="button" aria-expanded="false">
-        <span class="inet-icon">🌐</span>
-        <h3>Online on request</h3>
-        <p>Need current info? Just ask. It'll search, summarize, and come right back. One request at a time, and you're always in control.</p>
-        <div class="card-detail">
-          <p>You choose which searches are allowed, when, and for how long. Full transparency on every outbound request.</p>
-          <span class="portfolio-tag">🌍 Network log · coming soon</span>
+    </section>
+
+    <!-- Internet on your terms -->
+    <section class="surface">
+      <p class="eyebrow reveal">your privacy</p>
+      <h2 class="section-title reveal">Online when you say so.<br>Offline by default.</h2>
+      <p class="section-sub reveal">Most AI is always connected, always sending. This one isn't. It lives on your device, and nothing leaves unless you ask it to.</p>
+
+      <div class="internet-grid">
+        <div class="inet-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="inet-icon">🔒</span>
+          <h3>Offline by default</h3>
+          <p>Nothing leaves your device unless you ask. No background syncing, no data collection, no profiles being built while you sleep.</p>
+          <div class="card-detail">
+            <p>Even the AI model itself runs locally. No API calls, no usage logs, no third-party involvement unless you want it.</p>
+            <span class="tag">🛡️ Privacy audit · coming soon</span>
+          </div>
+        </div>
+        <div class="inet-card card reveal" tabindex="0" role="button" aria-expanded="false">
+          <span class="inet-icon">🌐</span>
+          <h3>Online on request</h3>
+          <p>Need current info? Just ask. It'll search, summarize, and come right back. One request at a time, and you're always in control.</p>
+          <div class="card-detail">
+            <p>You choose which searches are allowed, when, and for how long. Full transparency on every outbound request.</p>
+            <span class="tag">🌍 Network log · coming soon</span>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- The teacher model -->
-  <section class="surface">
-    <p class="eyebrow">how we work together</p>
-    <h2 class="section-title">We help you start. You take it from there. 🎓</h2>
-    <p class="section-sub">Think of it like having a great teacher. They work through things with you, answer every question, then send you home to do your own thing. Come back any time.</p>
+    <!-- The teacher model -->
+    <section>
+      <p class="eyebrow reveal">how we work together</p>
+      <h2 class="section-title reveal">We help you start. You take it from there.</h2>
+      <p class="section-sub reveal">Think of it like having a great teacher. They work through things with you, answer every question, then send you home to do your own thing. Come back any time.</p>
 
-    <div class="steps">
-      <div class="step">
-        <span class="step-emoji">👋</span>
-        <div>
+      <div class="timeline">
+        <div class="tl-step reveal">
+          <span class="tl-icon">👋</span>
           <h3>We get you set up</h3>
           <p>We'll get it running, make sure it fits your life or work, and walk through the basics together at your pace.</p>
         </div>
-      </div>
-      <div class="step">
-        <span class="step-emoji">🧑‍🏫</span>
-        <div>
+        <div class="tl-step reveal">
+          <span class="tl-icon">🧑‍🏫</span>
           <h3>You learn together</h3>
           <p>Ask it anything. It explains as it helps. The more you work together, the more it understands what you're really after.</p>
         </div>
-      </div>
-      <div class="step">
-        <span class="step-emoji">🏠</span>
-        <div>
+        <div class="tl-step reveal">
+          <span class="tl-icon">🏠</span>
           <h3>Work at your own pace</h3>
           <p>Once you've got the hang of it, run it however you like. No check-ins, no subscription holding your work hostage.</p>
         </div>
-      </div>
-      <div class="step">
-        <span class="step-emoji">💬</span>
-        <div>
+        <div class="tl-step reveal">
+          <span class="tl-icon">💬</span>
           <h3>Come back any time</h3>
           <p>New questions, new features, something you want to build next. The door is always open and we're always here.</p>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Demo: See it in action -->
-  <section id="demo">
-    <p class="eyebrow">see it in action</p>
-    <h2 class="section-title">Meet your aime 👋</h2>
-    <p class="section-sub">Here's what a real interaction looks like, from the first prompt to new context saved.</p>
+    <!-- Demo: See it in action -->
+    <section id="demo" class="surface">
+      <p class="eyebrow reveal">see it in action</p>
+      <h2 class="section-title reveal">Meet your aime</h2>
+      <p class="section-sub reveal">Here's what a real interaction looks like, from the first prompt to new context saved.</p>
 
-    <div class="demo-shell">
-      <input type="radio" name="dt" id="dt1" checked>
-      <input type="radio" name="dt" id="dt2">
-      <input type="radio" name="dt" id="dt3">
-      <input type="radio" name="dt" id="dt4">
+      <div class="demo-shell reveal">
+        <input type="radio" name="dt" id="dt1" checked>
+        <input type="radio" name="dt" id="dt2">
+        <input type="radio" name="dt" id="dt3">
+        <input type="radio" name="dt" id="dt4">
 
-      <div class="demo-tabs-row">
-        <label for="dt1" class="demo-tab">💬 Prompt</label>
-        <label for="dt2" class="demo-tab">✨ Response</label>
-        <label for="dt3" class="demo-tab">🧠 Memory</label>
-        <label for="dt4" class="demo-tab">📖 Guide</label>
+        <div class="demo-tabs-row">
+          <label for="dt1" class="demo-tab">💬 Prompt</label>
+          <label for="dt2" class="demo-tab">✨ Response</label>
+          <label for="dt3" class="demo-tab">🧠 Memory</label>
+          <label for="dt4" class="demo-tab">📖 Guide</label>
+        </div>
+
+        <div class="demo-panels">
+
+          <div class="dp dp1">
+            <div class="chat-wrap">
+              <div class="bubble-user">
+                <span class="bubble-who">You</span>
+                <p>I have a pitch meeting with a new client tomorrow morning. Can you help me prep?</p>
+              </div>
+            </div>
+            <p class="demo-note">👆 Just type naturally. No commands, no special syntax needed.</p>
+          </div>
+
+          <div class="dp dp2">
+            <div class="chat-wrap">
+              <div class="bubble-aime">
+                <span class="bubble-who">aime</span>
+                <p><strong>Here's what to focus on for tomorrow:</strong></p>
+                <p>🎯 <strong>Before you walk in</strong><br>
+                Confirm who will be in the room and what role each person plays. Decision-maker vs. influencer changes how you open.</p>
+                <p>📋 <strong>Suggested opening</strong><br>
+                Lead with what you're NOT there to do. It builds trust fast with new clients who've been burned by over-promises.</p>
+                <p>💡 <strong>If the conversation stalls</strong><br>
+                Ask: "What would solving this allow you to do that you can't right now?"</p>
+                <p>Want to practice the opening together? Just say the word.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="dp dp3">
+            <div class="context-card">
+              <p class="context-title">🧠 Saved from this conversation</p>
+              <div class="context-items">
+                <div class="context-item">📌 Pitch meeting tomorrow morning</div>
+                <div class="context-item">👤 New client, no prior history yet</div>
+                <div class="context-item">💡 You prefer trust-first openings</div>
+              </div>
+              <p class="context-privacy">🔒 Stays on your device. Only you can see this.</p>
+              <p class="context-sub">You can update or remove any memory at any time.</p>
+            </div>
+          </div>
+
+          <div class="dp dp4">
+            <div class="guide-card">
+              <p class="guide-title">📖 How meeting prep gets better over time</p>
+              <div class="guide-steps">
+                <div class="guide-step"><span class="gs-num">1</span>Searches your previous notes about this person or company</div>
+                <div class="guide-step"><span class="gs-num">2</span>Cross-references your communication style and preferences</div>
+                <div class="guide-step"><span class="gs-num">3</span>Flags relevant past outcomes and follow-ups</div>
+                <div class="guide-step"><span class="gs-num">4</span>Gets sharper every time you prep together</div>
+              </div>
+              <p class="guide-quote">"No retraining. No waiting. Just more context."</p>
+            </div>
+          </div>
+
+        </div>
       </div>
+    </section>
 
-      <div class="demo-panels">
+    <!-- FAQ -->
+    <section>
+      <p class="eyebrow reveal">questions</p>
+      <h2 class="section-title reveal">Common questions</h2>
+      <p class="section-sub reveal">No jargon, just honest answers.</p>
 
-        <div class="dp dp1">
-          <div class="chat-wrap">
-            <div class="bubble-user">
-              <span class="bubble-who">You</span>
-              <p>I have a pitch meeting with a new client tomorrow morning. Can you help me prep?</p>
-            </div>
-          </div>
-          <p class="demo-note">👆 Just type naturally. No commands, no special syntax needed.</p>
-        </div>
-
-        <div class="dp dp2">
-          <div class="chat-wrap">
-            <div class="bubble-aime">
-              <span class="bubble-who">aime</span>
-              <p><strong>Here's what to focus on for tomorrow:</strong></p>
-              <p>🎯 <strong>Before you walk in</strong><br>
-              Confirm who will be in the room and what role each person plays. Decision-maker vs. influencer changes how you open.</p>
-              <p>📋 <strong>Suggested opening</strong><br>
-              Lead with what you're NOT there to do. It builds trust fast with new clients who've been burned by over-promises.</p>
-              <p>💡 <strong>If the conversation stalls</strong><br>
-              Ask: "What would solving this allow you to do that you can't right now?"</p>
-              <p>Want to practice the opening together? Just say the word.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="dp dp3">
-          <div class="context-card">
-            <p class="context-title">🧠 Saved from this conversation</p>
-            <div class="context-items">
-              <div class="context-item">📌 Pitch meeting tomorrow morning</div>
-              <div class="context-item">👤 New client, no prior history yet</div>
-              <div class="context-item">💡 You prefer trust-first openings</div>
-            </div>
-            <p class="context-privacy">🔒 Stays on your device. Only you can see this.</p>
-            <p class="context-sub">You can update or remove any memory at any time.</p>
-          </div>
-        </div>
-
-        <div class="dp dp4">
-          <div class="guide-card">
-            <p class="guide-title">📖 How meeting prep gets better over time</p>
-            <div class="guide-steps">
-              <div class="guide-step">
-                <span class="gs-num">1</span>
-                Searches your previous notes about this person or company
-              </div>
-              <div class="guide-step">
-                <span class="gs-num">2</span>
-                Cross-references your communication style and preferences
-              </div>
-              <div class="guide-step">
-                <span class="gs-num">3</span>
-                Flags relevant past outcomes and follow-ups
-              </div>
-              <div class="guide-step">
-                <span class="gs-num">4</span>
-                Gets sharper every time you prep together
-              </div>
-            </div>
-            <p class="guide-quote">"No retraining. No waiting. Just more context."</p>
-          </div>
-        </div>
-
+      <div class="faq reveal">
+        <details>
+          <summary>Does it send my data anywhere?</summary>
+          <p class="faq-answer">Only if you ask it to reach the internet. By default, everything stays on your device. Your conversations, your goals, your history are all local and all yours. Nothing is sent to a server, analyzed in the background, or shared with anyone.</p>
+        </details>
+        <details>
+          <summary>Do I need to be technical to use it?</summary>
+          <p class="faq-answer">Not at all. It's built to be friendly for everyone, from first-timers to seasoned engineers. If you're technical, there's plenty to configure. If you're not, just start a conversation and it figures out the rest.</p>
+        </details>
+        <details>
+          <summary>What does "runs locally" actually mean?</summary>
+          <p class="faq-answer">The AI runs on your computer or phone, not on a company's server somewhere. Think of it like an app that lives on your device rather than a website you visit. The result: private, offline-capable, and yours to keep.</p>
+        </details>
+        <details>
+          <summary>How does it know which AI model to use?</summary>
+          <p class="faq-answer">aime scans your hardware (RAM, GPU, VRAM) and ranks models against what your machine can actually run well, then handles the download and serving for you. You can also compare models side by side, blind, and pick the one that feels right.</p>
+        </details>
+        <details>
+          <summary>Can it connect to the internet when I need it to?</summary>
+          <p class="faq-answer">Yes. When you need real-time information like news, research, or a quick lookup, just say so. It reaches out, gets what you need, and comes back. You're always the one giving permission. It never goes online on its own.</p>
+        </details>
+        <details>
+          <summary>How is this different from ChatGPT or other AI tools?</summary>
+          <p class="faq-answer">Most AI tools live in the cloud, which means your data travels to their servers every time you use them. This is different: it runs on your machine, saves locally, and only reaches out when you say so. It's also designed to actually know you over time, not just answer one-off questions.</p>
+        </details>
+        <details>
+          <summary>Is there a cost?</summary>
+          <p class="faq-answer">We're in early access right now. Drop us a note and we'll reach out personally to talk through options. Our goal is to make this accessible, and we'll work something out together.</p>
+        </details>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FAQ -->
-  <section class="surface">
-    <p class="eyebrow">questions</p>
-    <h2 class="section-title">Common questions ❓</h2>
-    <p class="section-sub">No jargon, just honest answers.</p>
-
-    <div class="faq">
-      <details>
-        <summary>Does it send my data anywhere?</summary>
-        <p class="faq-answer">Only if you ask it to reach the internet. By default, everything stays on your device. Your conversations, your goals, your history are all local and all yours. Nothing is sent to a server, analyzed in the background, or shared with anyone.</p>
-      </details>
-      <details>
-        <summary>Do I need to be technical to use it?</summary>
-        <p class="faq-answer">Not at all. It's built to be friendly for everyone, from first-timers to seasoned engineers. If you're technical, there's plenty to configure. If you're not, just start a conversation and it figures out the rest.</p>
-      </details>
-      <details>
-        <summary>What does "runs locally" actually mean?</summary>
-        <p class="faq-answer">The AI runs on your computer or phone, not on a company's server somewhere. Think of it like an app that lives on your device rather than a website you visit. The result: private, offline-capable, and yours to keep.</p>
-      </details>
-      <details>
-        <summary>Can it connect to the internet when I need it to?</summary>
-        <p class="faq-answer">Yes. When you need real-time information like news, research, or a quick lookup, just say so. It reaches out, gets what you need, and comes back. You're always the one giving permission. It never goes online on its own.</p>
-      </details>
-      <details>
-        <summary>How is this different from ChatGPT or other AI tools?</summary>
-        <p class="faq-answer">Most AI tools live in the cloud, which means your data travels to their servers every time you use them. This is different: it runs on your machine, saves locally, and only reaches out when you say so. It's also designed to actually know you over time, not just answer one-off questions.</p>
-      </details>
-      <details>
-        <summary>Is there a cost?</summary>
-        <p class="faq-answer">We're in early access right now. Drop us a note and we'll reach out personally to talk through options. Our goal is to make this accessible, and we'll work something out together.</p>
-      </details>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="cta-section">
-    <p class="eyebrow">ready?</p>
-    <h2 class="section-title">Let's get you started ✨</h2>
-    <p class="section-sub">Drop us a note and we'll reach out to help you get set up personally.</p>
-    <a class="cta" href="mailto:support@aime.fyi">Get early access &rarr;</a>
-  </section>
+    <!-- CTA -->
+    <section class="cta-section">
+      <p class="eyebrow reveal">ready?</p>
+      <h2 class="section-title reveal">Let's get you started</h2>
+      <p class="section-sub reveal">Drop us a note and we'll reach out to help you get set up personally.</p>
+      <a class="cta reveal" href="mailto:support@aime.fyi">Get early access &rarr;</a>
+    </section>
+  </main>
 
   <footer>
     Questions? <a href="mailto:support@aime.fyi">support@aime.fyi</a>
@@ -1059,7 +780,12 @@
   </footer>
 
   <script>
-    document.querySelectorAll('.card-interactive').forEach(function(card) {
+    var nav = document.getElementById('site-nav');
+    window.addEventListener('scroll', function() {
+      nav.classList.toggle('scrolled', window.scrollY > 8);
+    }, { passive: true });
+
+    document.querySelectorAll('.card').forEach(function(card) {
       function toggle() {
         var expanded = card.classList.toggle('expanded');
         card.setAttribute('aria-expanded', expanded);
@@ -1069,6 +795,16 @@
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
       });
     });
+
+    var revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
   </script>
 
 </body>
