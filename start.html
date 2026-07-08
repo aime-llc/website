@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Get started with aime — step-by-step setup guide. No technical experience needed." />
-  <title>aime — Get Started</title>
+  <meta name="description" content="Get started with aime: clone the repo, run one command, open your browser. Optional steps for a local model, Claude Code, and pairing your phone." />
+  <title>Get started · aime</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -14,7 +14,7 @@
       --accent: #4f8cff; --accent-bright: #7fb0ff; --accent-2: #8b7bff; --accent-3: #38e1c6;
       --green: #34c759; --amber: #f5a623;
     }
-    html { font-size: 16px; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; overflow-x: hidden; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.7; overflow-x: hidden; }
     a { color: var(--accent-bright); text-decoration: none; }
     a:hover { text-decoration: underline; }
@@ -30,35 +30,33 @@
     .nav-link { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
     .nav-link:hover { color: var(--ink); }
 
+    /* ── Reveal ── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
     /* ── Hero ── */
-    .hero {
-      padding: 140px 24px 80px;
-      text-align: center;
-      max-width: 720px;
-      margin: 0 auto;
-    }
+    .hero { padding: 140px 24px 64px; text-align: center; max-width: 720px; margin: 0 auto; }
     .eyebrow { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent-3); margin-bottom: 16px; display: block; }
     h1 { font-size: clamp(2.25rem, 6vw, 4rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 18px; }
-    .hero p { font-size: 1.125rem; color: var(--muted); max-width: 520px; margin: 0 auto 36px; }
+    .hero p { font-size: 1.125rem; color: var(--muted); max-width: 540px; margin: 0 auto; }
 
-    /* ── Mac / Windows selector ── */
-    .os-tabs {
-      display: flex; gap: 0; justify-content: center; margin-bottom: 60px;
+    .honesty-note {
+      max-width: 560px; margin: 28px auto 0; text-align: left;
+      background: rgba(245,166,35,0.06); border: 1px solid rgba(245,166,35,0.2);
+      border-radius: 12px; padding: 16px 18px; font-size: 0.875rem; color: var(--muted);
     }
-    .os-tab {
-      padding: 10px 28px; font-size: 0.875rem; font-weight: 600;
-      background: var(--surface); border: 1px solid var(--line);
-      cursor: pointer; color: var(--muted); transition: all 0.2s ease;
+    .honesty-note strong { color: var(--amber); }
+
+    /* ── Section labels ── */
+    .group-label {
+      max-width: 720px; margin: 0 auto; padding: 0 24px;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent-bright); margin-top: 56px; margin-bottom: -8px;
     }
-    .os-tab:first-child { border-radius: 10px 0 0 10px; }
-    .os-tab:last-child { border-radius: 0 10px 10px 0; border-left: none; }
-    .os-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .group-label:first-of-type { margin-top: 8px; }
 
     /* ── Steps ── */
-    .steps-wrapper { max-width: 720px; margin: 0 auto; padding: 0 24px 80px; }
-
-    .os-section { display: none; }
-    .os-section.active { display: block; }
+    .steps-wrapper { max-width: 720px; margin: 0 auto; padding: 40px 24px 24px; }
 
     .step {
       display: flex; gap: 24px; padding: 32px 0;
@@ -97,12 +95,11 @@
 
     .command-block {
       background: var(--surface); border: 1px solid var(--line);
-      border-radius: 12px; padding: 16px 18px; margin: 14px 0;
+      border-radius: 12px; padding: 16px 90px 16px 18px; margin: 14px 0;
       font-family: SFMono-Regular, ui-monospace, Menlo, monospace;
       font-size: 0.875rem; color: var(--accent-3); line-height: 1.7;
       position: relative; overflow-x: auto;
     }
-    .command-block .comment { color: var(--muted-2); }
     .copy-btn {
       position: absolute; top: 10px; right: 12px;
       background: var(--surface-2); border: 1px solid var(--line-strong);
@@ -119,16 +116,10 @@
     }
     .tip strong { color: var(--accent-3); }
 
-    .warning {
-      background: rgba(245,166,35,0.06); border: 1px solid rgba(245,166,35,0.2);
-      border-radius: 10px; padding: 14px 16px; margin: 14px 0;
-      font-size: 0.875rem; color: var(--muted);
-    }
-    .warning strong { color: var(--amber); }
-
     /* ── FAQ ── */
-    .faq-section { max-width: 720px; margin: 0 auto; padding: 0 24px 80px; }
-    .faq-section h2 { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 32px; }
+    .faq-section { max-width: 720px; margin: 0 auto; padding: 24px 24px 80px; }
+    .faq-section h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .faq-section > p { font-size: 0.9375rem; color: var(--muted); margin-bottom: 28px; }
 
     details { border-bottom: 1px solid var(--line); }
     details:first-of-type { border-top: 1px solid var(--line); }
@@ -162,7 +153,7 @@
 </head>
 <body>
 
-  <nav>
+  <nav id="site-nav">
     <a class="nav-logo" href="index.html">aime</a>
     <div class="nav-links">
       <a class="nav-link" href="learn.html">Learn</a>
@@ -172,260 +163,134 @@
 
   <div class="hero">
     <span class="eyebrow">getting started</span>
-    <h1>Up and running in 5 minutes</h1>
-    <p>No technical background needed. If you can download an app and open a Terminal, you can run aime. Pick your computer:</p>
-
-    <div class="os-tabs">
-      <button class="os-tab active" onclick="switchOS('mac')">Mac (Apple Silicon)</button>
-      <button class="os-tab" onclick="switchOS('win')">Windows</button>
+    <h1 class="reveal">Up and running in three commands</h1>
+    <p class="reveal">Get the code, start it, open your browser. Everything after that is optional.</p>
+    <div class="honesty-note reveal">
+      <strong>Honest heads-up:</strong> today, the first step needs a terminal. If that's unfamiliar, email <a href="mailto:support@aime.fyi">support@aime.fyi</a> and we'll set it up with you.
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       MAC STEPS
-  ════════════════════════════════════════════════════════════════ -->
+  <p class="group-label reveal">required</p>
   <div class="steps-wrapper">
-    <div class="os-section active" id="steps-mac">
 
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-body">
-          <span class="step-badge badge-once">One time</span>
-          <h3>Open Terminal</h3>
-          <p>Terminal is a built-in app on every Mac. To find it:</p>
-          <ol style="padding-left:1.4em;color:var(--muted);font-size:0.9375rem;margin-bottom:12px;">
-            <li>Press <kbd>⌘ Space</kbd> to open Spotlight</li>
-            <li>Type <strong>Terminal</strong> and press <kbd>Return</kbd></li>
-          </ol>
-          <p>A black or white window with a blinking cursor will open. That's it — you're in the Terminal.</p>
-          <div class="tip"><strong>Tip:</strong> Don't be scared of Terminal. You're just typing commands, like texting your computer. Nothing you type can break your Mac.</div>
+    <div class="step reveal">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <span class="step-badge badge-once">One time</span>
+        <h3>Get the code</h3>
+        <p>Clone aime to your computer.</p>
+        <div class="command-block">
+          <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+          git clone https://github.com/aime-llc/aime-web.git ~/aime
         </div>
+        <p>Early access right now, so you'll need repo access first. <a href="mailto:support@aime.fyi">Request it</a> if you don't have it yet.</p>
       </div>
+    </div>
 
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-body">
-          <span class="step-badge badge-once">One time</span>
-          <h3>Download aime</h3>
-          <p>In Terminal, copy and paste this command, then press <kbd>Return</kbd>:</p>
-          <div class="command-block">
-            <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
-            git clone https://github.com/aime-llc/aime.git ~/aime
-          </div>
-          <p>This downloads the aime files to a folder called <code>aime</code> in your home directory. You'll see a bunch of text scroll by — that's normal.</p>
-          <div class="tip"><strong>New to Terminal?</strong> To paste in Terminal, use <kbd>⌘ V</kbd> just like anywhere else.</div>
+    <div class="step reveal">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <span class="step-badge badge-easy">Every time</span>
+        <h3>Start it</h3>
+        <p>One command starts the backend and the app together.</p>
+        <div class="command-block">
+          <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+          cd ~/aime &amp;&amp; ./dev.sh
         </div>
+        <div class="tip"><strong>First run:</strong> it installs everything it needs automatically. That can take a minute or two. After that, it starts in seconds.</div>
       </div>
+    </div>
 
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-body">
-          <span class="step-badge badge-once">One time</span>
-          <h3>Run the setup script</h3>
-          <p>Now type these two commands, pressing <kbd>Return</kbd> after each:</p>
-          <div class="command-block">
-            <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
-            cd ~/aime<br>
-            ./setup.py
-          </div>
-          <p>The setup script will:</p>
-          <ul style="font-size:0.9375rem;color:var(--muted);">
-            <li>Check if Python is installed (and install it if needed)</li>
-            <li>Ask you to choose a username and password for your aime account</li>
-            <li>Set up the local database</li>
-          </ul>
-          <div class="warning"><strong>Note:</strong> It may ask for your Mac password to install some tools. This is normal — it needs permission, just like when you install any app.</div>
+    <div class="step reveal">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <span class="step-badge badge-easy">Every time</span>
+        <h3>Open it</h3>
+        <p>Open your browser to the app and start typing.</p>
+        <div class="command-block">
+          <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+          http://127.0.0.1:7901
         </div>
+        <p>No account wall, no onboarding wizard. Just a chat box.</p>
       </div>
+    </div>
 
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-body">
-          <span class="step-badge badge-easy">Every time</span>
-          <h3>Start aime</h3>
-          <p>Whenever you want to use aime, open Terminal and run:</p>
-          <div class="command-block">
-            <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
-            cd ~/aime &amp;&amp; ./start-macos.sh
-          </div>
-          <p>aime will start, and after a few seconds your browser will open to <code>http://localhost:7860</code> — that's your personal aime. Log in with the username and password you chose in Step 3.</p>
-          <div class="tip"><strong>To stop aime:</strong> go back to Terminal and press <kbd>Control C</kbd>.</div>
+  </div>
+
+  <p class="group-label reveal">optional</p>
+  <div class="steps-wrapper">
+
+    <div class="step reveal">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <span class="step-badge badge-optional">Optional</span>
+        <h3>Add a private, offline model</h3>
+        <p>Install <a href="https://ollama.com" target="_blank" rel="noopener">Ollama</a> once, then open <strong>Settings</strong> inside aime and click Install next to any model. You'll see real download progress, right there.</p>
+      </div>
+    </div>
+
+    <div class="step reveal">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <span class="step-badge badge-optional">Optional</span>
+        <h3>Sign into Claude Code for Online mode</h3>
+        <p>Install <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank" rel="noopener">Claude Code</a>, then run it once to sign in.</p>
+        <div class="command-block">
+          <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+          claude
         </div>
+        <p>Then flip aime's switch to Online. ChatGPT and Gemini connect the same way, once those adapters are wired up on your machine.</p>
       </div>
+    </div>
 
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-body">
-          <span class="step-badge badge-optional">Optional but recommended</span>
-          <h3>Connect an AI model</h3>
-          <p>aime works best with an AI model. You have two choices:</p>
-
-          <p><strong>Option A — Run AI locally (completely private, free):</strong></p>
-          <p>In aime, go to the <strong>Cookbook</strong> section. aime will scan your Mac and recommend models that fit your hardware. Click "Download" next to any model to get started. The first download takes a few minutes.</p>
-
-          <p><strong>Option B — Use Claude or OpenAI (faster, requires API key):</strong></p>
-          <p>Go to <strong>Settings → Model Endpoints</strong> and paste in your API key from <a href="https://console.anthropic.com" target="_blank" rel="noopener">Anthropic</a> or <a href="https://platform.openai.com" target="_blank" rel="noopener">OpenAI</a>. These services cost a small amount per use (often less than $1/month for light personal use).</p>
-          <div class="tip"><strong>Which should I choose?</strong> If privacy is your top priority or you don't want to pay anything, choose Option A. If you want the fastest and most capable AI, choose Option B.</div>
+    <div class="step reveal">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <span class="step-badge badge-optional">Optional</span>
+        <h3>Pair your phone over wifi</h3>
+        <p>On the same wifi as your phone, run this from the aime folder.</p>
+        <div class="command-block">
+          <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+          ./server/serve-lan.sh
         </div>
+        <p>It prints a link and a token. Open that link on your phone's browser and it pairs, no app store needed. It remembers your phone after that.</p>
       </div>
+    </div>
 
-      <div class="step">
-        <div class="step-num">6</div>
-        <div class="step-body">
-          <span class="step-badge badge-easy">Start here</span>
-          <h3>Start your first conversation</h3>
-          <p>You're ready! Just type in the chat box. Here are some things to try:</p>
-          <ul style="font-size:0.9375rem;color:var(--muted);">
-            <li>"Help me write an email to reschedule a meeting with my doctor."</li>
-            <li>"Make a shopping list for a dinner party for 6 people."</li>
-            <li>"Explain what a Roth IRA is in plain English."</li>
-            <li>"Remind me to call Mom tomorrow at 3pm."</li>
-            <li>"Help me plan my week — I have three deadlines and a dentist appointment."</li>
-          </ul>
-          <div class="tip"><strong>The more context you give, the better.</strong> Don't just say "write an email" — tell aime who it's for, what tone you want, and what you need it to say.</div>
-        </div>
-      </div>
-
-    </div><!-- /steps-mac -->
-
-    <!-- ═══════════════════════════════════════════════════════════════
-         WINDOWS STEPS
-    ════════════════════════════════════════════════════════════════ -->
-    <div class="os-section" id="steps-win">
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-body">
-          <span class="step-badge badge-once">One time</span>
-          <h3>Install Python</h3>
-          <p>Go to <a href="https://python.org/downloads" target="_blank" rel="noopener">python.org/downloads</a> and download the latest version of Python. Run the installer.</p>
-          <div class="warning"><strong>Important:</strong> On the first screen of the installer, check the box that says <strong>"Add Python to PATH"</strong> before clicking Install. This is easy to miss.</div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-body">
-          <span class="step-badge badge-once">One time</span>
-          <h3>Install Git</h3>
-          <p>Go to <a href="https://git-scm.com/download/win" target="_blank" rel="noopener">git-scm.com/download/win</a> and download Git for Windows. Run the installer with all default options.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-body">
-          <span class="step-badge badge-once">One time</span>
-          <h3>Open Command Prompt</h3>
-          <p>Press <kbd>Windows Key</kbd>, type <strong>cmd</strong>, and press <kbd>Enter</kbd>. A dark window with a blinking cursor will open — that's Command Prompt.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-body">
-          <span class="step-badge badge-once">One time</span>
-          <h3>Download &amp; set up aime</h3>
-          <p>In Command Prompt, run these commands one at a time (press Enter after each):</p>
-          <div class="command-block">
-            <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
-            git clone https://github.com/aime-llc/aime.git %USERPROFILE%\aime<br>
-            cd %USERPROFILE%\aime<br>
-            python setup.py
-          </div>
-          <p>The setup script will guide you through creating a username and password. It installs everything aime needs automatically.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-body">
-          <span class="step-badge badge-easy">Every time</span>
-          <h3>Start aime</h3>
-          <p>Open Command Prompt and run:</p>
-          <div class="command-block">
-            <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
-            cd %USERPROFILE%\aime &amp;&amp; python -m uvicorn app:app --port 7860
-          </div>
-          <p>Then open your browser and go to <code>http://localhost:7860</code>. Log in with the credentials you chose in setup.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">6</div>
-        <div class="step-body">
-          <span class="step-badge badge-optional">Optional but recommended</span>
-          <h3>Connect an AI model</h3>
-          <p>Same as Mac — see Step 5 in the Mac guide above. Connect a local model via the Cookbook, or add an API key in Settings.</p>
-        </div>
-      </div>
-
-    </div><!-- /steps-win -->
-
-  </div><!-- /steps-wrapper -->
+  </div>
 
   <!-- ── FAQ ── -->
   <div class="faq-section">
-    <h2>Common questions</h2>
+    <h2 class="reveal">Quick answers</h2>
+    <p class="reveal">A few things people usually ask right after this page.</p>
 
-    <details>
-      <summary>Do I need to be technical to use aime?</summary>
+    <details class="reveal">
+      <summary>Is it free?</summary>
       <div class="faq-body">
-        <p>No. The setup above is the hardest part, and it's a one-time thing. After that, using aime is as simple as having a conversation. If you can send a text message, you can use aime.</p>
+        <p>aime itself is free. Offline mode has no ongoing cost, it's your own computer doing the work. Online mode uses your own Claude Code, ChatGPT, or Gemini account, so you pay whatever that vendor charges you.</p>
       </div>
     </details>
 
-    <details>
-      <summary>Does aime cost money?</summary>
+    <details class="reveal">
+      <summary>Do I need to be technical?</summary>
       <div class="faq-body">
-        <p>The aime software itself is free and open source. If you use a local AI model (Option A), there's no ongoing cost. If you connect an API like Anthropic Claude or OpenAI (Option B), those providers charge small fees based on usage — typically $1–$5/month for everyday personal use.</p>
+        <p>Getting started today needs a terminal and one command. After that, using aime is just a conversation. We're working on making step one easier.</p>
       </div>
     </details>
 
-    <details>
-      <summary>Is my data private?</summary>
+    <details class="reveal">
+      <summary>Something broke during setup. Now what?</summary>
       <div class="faq-body">
-        <p>Yes. Everything you say to aime stays on your computer. aime doesn't send your conversations anywhere. If you choose to use a third-party API (like Claude or OpenAI), your messages are sent to that service — but that's your choice, and you can always use a local model instead for complete privacy.</p>
+        <p>Email the exact error to <a href="mailto:support@aime.fyi">support@aime.fyi</a> and we'll walk you through it personally.</p>
       </div>
     </details>
-
-    <details>
-      <summary>What Mac does aime work on?</summary>
-      <div class="faq-body">
-        <p>aime works best on <strong>Apple Silicon Macs</strong> (M1, M2, M3, M4 chip) because these can run AI models locally with the GPU. It also works on Intel Macs but local models will be slower. For the best experience: any Mac from 2020 or later with at least 8GB of RAM.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>I got an error during setup. What do I do?</summary>
-      <div class="faq-body">
-        <p>Copy the error message and email it to <a href="mailto:support@aime.fyi">support@aime.fyi</a>. We'll walk you through it personally. You can also re-run the setup at any time — it's safe to run more than once.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>Can I use aime to help with my business?</summary>
-      <div class="faq-body">
-        <p>Yes, absolutely. aime is great for drafting emails, summarizing documents, researching topics, planning projects, scheduling, and more. See our <a href="legal.html#consulting">Consulting Terms</a> if you want to use aime as part of a professional or consulting service.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>How do I update aime when a new version comes out?</summary>
-      <div class="faq-body">
-        <p>Open Terminal and run:</p>
-        <code style="display:block;margin:10px 0;padding:10px 14px;border-radius:8px;font-size:0.875rem;">cd ~/aime &amp;&amp; git pull</code>
-        <p>Then restart aime. That's it — one command.</p>
-      </div>
-    </details>
-
   </div>
 
   <!-- ── CTA ── -->
   <div class="cta-strip">
-    <h2>Still stuck? We'll help personally.</h2>
-    <p>Email us and we'll walk you through setup step by step.</p>
-    <a class="cta" href="mailto:support@aime.fyi">Email support &rarr;</a>
+    <h2 class="reveal">Still stuck? We'll help personally.</h2>
+    <p class="reveal">Email us and we'll walk you through setup step by step.</p>
+    <a class="cta reveal" href="mailto:support@aime.fyi">Email support &rarr;</a>
   </div>
 
   <footer>
@@ -437,14 +302,6 @@
   </footer>
 
   <script>
-    function switchOS(os) {
-      document.querySelectorAll('.os-tab').forEach(function(t) { t.classList.remove('active'); });
-      document.querySelectorAll('.os-section').forEach(function(s) { s.classList.remove('active'); });
-      var btn = os === 'mac' ? document.querySelectorAll('.os-tab')[0] : document.querySelectorAll('.os-tab')[1];
-      btn.classList.add('active');
-      document.getElementById('steps-' + os).classList.add('active');
-    }
-
     function copyCmd(btn) {
       var block = btn.parentElement;
       var text = block.innerText.replace('Copy', '').replace('Copied!', '').trim();
@@ -454,6 +311,35 @@
         setTimeout(function() { btn.textContent = orig; }, 1800);
       });
     }
+  </script>
+
+  <script>
+    // Scroll reveal: must never permanently hide content. Runs in its own
+    // script block so an unrelated error later in the page can't stop it
+    // from registering. Falls back to instantly visible if
+    // IntersectionObserver throws/is unsupported, and force-reveals
+    // everything after 3s no matter what as a last-resort safety net.
+    function revealAllNow() {
+      document.querySelectorAll('.reveal').forEach(function(el) { el.classList.add('in'); });
+    }
+    try {
+      if ('IntersectionObserver' in window) {
+        var revealObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
+      } else {
+        revealAllNow();
+      }
+    } catch (e) {
+      revealAllNow();
+    }
+    setTimeout(revealAllNow, 3000);
   </script>
 
 </body>
