@@ -5,17 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Get started with aime: clone the repo, run one command, open your browser. Optional steps for a local model, Claude Code, and pairing your phone." />
   <title>Get started · aime</title>
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('aime-theme');
+        var theme = stored === 'light' || stored === 'dark'
+          ? stored
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
+      color-scheme: dark;
       --bg: #050507; --bg-raised: #0a0b10; --surface: #0d0f16; --surface-2: #12141d;
       --ink: #f5f6f8; --muted: #9296a3; --muted-2: #5e616b;
       --line: rgba(255,255,255,0.09); --line-strong: rgba(255,255,255,0.16);
       --accent: #4f8cff; --accent-bright: #7fb0ff; --accent-2: #8b7bff; --accent-3: #38e1c6;
       --green: #34c759; --amber: #f5a623;
+      --cta-bg: #fff; --cta-ink: #050507; --cta-shadow: rgba(255, 255, 255, 0.14);
+      --nav-bg-scrolled: rgba(5, 5, 7, 0.82);
+    }
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #ffffff; --bg-raised: #f7f8fa; --surface: #f2f3f6; --surface-2: #e9ebef;
+      --ink: #14161c; --muted: #52565f; --muted-2: #767a85;
+      --line: rgba(20,22,30,0.10); --line-strong: rgba(20,22,30,0.20);
+      --accent: #2f6fe0; --accent-bright: #1550c9; --accent-2: #6a45c9; --accent-3: #0b7d69;
+      --green: #178a3d; --amber: #a8690a;
+      --cta-bg: #14161c; --cta-ink: #ffffff; --cta-shadow: rgba(20, 22, 30, 0.22);
+      --nav-bg-scrolled: rgba(255, 255, 255, 0.88);
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme]) {
+        color-scheme: light;
+        --bg: #ffffff; --bg-raised: #f7f8fa; --surface: #f2f3f6; --surface-2: #e9ebef;
+        --ink: #14161c; --muted: #52565f; --muted-2: #767a85;
+        --line: rgba(20,22,30,0.10); --line-strong: rgba(20,22,30,0.20);
+        --accent: #2f6fe0; --accent-bright: #1550c9; --accent-2: #6a45c9; --accent-3: #0b7d69;
+        --green: #178a3d; --amber: #a8690a;
+        --cta-bg: #14161c; --cta-ink: #ffffff; --cta-shadow: rgba(20, 22, 30, 0.22);
+        --nav-bg-scrolled: rgba(255, 255, 255, 0.88);
+      }
     }
     html { font-size: 16px; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; overflow-x: hidden; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.7; overflow-x: hidden; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.7; overflow-x: hidden; transition: background-color .2s ease, color .2s ease; }
     a { color: var(--accent-bright); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
@@ -23,12 +59,33 @@
       position: fixed; top: 0; inset-inline: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 28px; height: 64px;
-      background: rgba(5,5,7,0.82); border-bottom: 1px solid var(--line);
+      background: var(--nav-bg-scrolled); border-bottom: 1px solid var(--line);
+      transition: background-color .2s ease, border-color .2s ease;
     }
     .nav-logo { font-size: 0.9375rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
     .nav-links { display: flex; gap: 28px; align-items: center; }
-    .nav-link { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+    .nav-link { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; white-space: nowrap; }
+
+    @media (max-width: 480px) {
+      nav { padding: 0 16px; }
+      .nav-links { gap: 12px; }
+      .nav-link { font-size: 0.6875rem; letter-spacing: 0.06em; }
+      .theme-toggle { width: 28px; height: 28px; }
+      .theme-toggle svg { width: 13px; height: 13px; }
+    }
     .nav-link:hover { color: var(--ink); }
+
+    .theme-toggle {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      border: 1px solid var(--line); background: var(--surface); color: var(--muted);
+      cursor: pointer; transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+    }
+    .theme-toggle:hover { color: var(--ink); border-color: var(--line-strong); }
+    .theme-toggle svg { width: 15px; height: 15px; display: block; }
+    .theme-toggle .icon-moon { display: none; }
+    :root[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+    :root[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 
     /* ── Reveal ── */
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
@@ -139,12 +196,12 @@
     .cta-strip p { color: var(--muted); margin-bottom: 28px; }
     .cta {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 28px; background: #fff; color: #050507;
+      padding: 14px 28px; background: var(--cta-bg); color: var(--cta-ink);
       font-size: 0.9375rem; font-weight: 700; letter-spacing: -0.01em;
       border-radius: 980px; text-decoration: none;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s, color 0.2s;
     }
-    .cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,255,255,0.14); text-decoration: none; }
+    .cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--cta-shadow); text-decoration: none; }
 
     footer { text-align: center; padding: 32px 24px; font-size: 0.8125rem; color: var(--muted-2); border-top: 1px solid var(--line); }
     footer a { color: var(--muted); text-decoration: none; }
@@ -158,6 +215,10 @@
     <div class="nav-links">
       <a class="nav-link" href="learn.html">Learn</a>
       <a class="nav-link" href="legal.html">Legal</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme" title="Toggle color theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
     </div>
   </nav>
 
@@ -300,6 +361,21 @@
     <a href="legal.html">Legal</a>
     &nbsp;&middot;&nbsp; &copy; 2026 AIME, LLC.
   </footer>
+
+  <script>
+    try {
+      var themeToggle = document.getElementById('themeToggle');
+      if (themeToggle) {
+        themeToggle.addEventListener('click', function () {
+          var root = document.documentElement;
+          var current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+          var next = current === 'light' ? 'dark' : 'light';
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('aime-theme', next); } catch (e) {}
+        });
+      }
+    } catch (e) {}
+  </script>
 
   <script>
     function copyCmd(btn) {

@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="aime is a self-hosted AI assistant with one switch: talk privately to a small AI on your machine, or hand the same chat to Claude to get real work done. It remembers you, and that memory stays on your disk." />
   <title>aime · ai, me.</title>
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('aime-theme');
+        var theme = stored === 'light' || stored === 'dark'
+          ? stored
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -13,6 +24,7 @@
     }
 
     :root {
+      color-scheme: dark;
       --bg: #050507;
       --bg-raised: #0a0b10;
       --surface: #0d0f16;
@@ -26,7 +38,67 @@
       --accent-bright: #7fb0ff;
       --accent-2: #8b7bff;
       --accent-3: #38e1c6;
-      --gradient: linear-gradient(115deg, #4f8cff 0%, #8b7bff 50%, #38e1c6 100%);
+      --gradient: linear-gradient(115deg, var(--accent) 0%, var(--accent-2) 50%, var(--accent-3) 100%);
+      --cta-bg: #fff;
+      --cta-ink: #050507;
+      --cta-shadow: rgba(255, 255, 255, 0.18);
+      --ghost-hover-bg: rgba(255, 255, 255, 0.06);
+      --ghost-hover-border: rgba(255, 255, 255, 0.3);
+      --nav-bg: rgba(5, 5, 7, 0.55);
+      --nav-bg-scrolled: rgba(5, 5, 7, 0.82);
+      --media-frame-shadow: 0 30px 80px -30px rgba(79, 140, 255, 0.22);
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #ffffff;
+      --bg-raised: #f7f8fa;
+      --surface: #f2f3f6;
+      --surface-2: #e9ebef;
+      --ink: #14161c;
+      --muted: #52565f;
+      --muted-2: #767a85;
+      --line: rgba(20, 22, 30, 0.10);
+      --line-strong: rgba(20, 22, 30, 0.20);
+      --accent: #2f6fe0;
+      --accent-bright: #1550c9;
+      --accent-2: #6a45c9;
+      --accent-3: #0b7d69;
+      --cta-bg: #14161c;
+      --cta-ink: #ffffff;
+      --cta-shadow: rgba(20, 22, 30, 0.22);
+      --ghost-hover-bg: rgba(20, 22, 30, 0.05);
+      --ghost-hover-border: rgba(20, 22, 30, 0.28);
+      --nav-bg: rgba(255, 255, 255, 0.65);
+      --nav-bg-scrolled: rgba(255, 255, 255, 0.88);
+      --media-frame-shadow: 0 30px 80px -30px rgba(20, 22, 30, 0.16);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme]) {
+        color-scheme: light;
+        --bg: #ffffff;
+        --bg-raised: #f7f8fa;
+        --surface: #f2f3f6;
+        --surface-2: #e9ebef;
+        --ink: #14161c;
+        --muted: #52565f;
+        --muted-2: #767a85;
+        --line: rgba(20, 22, 30, 0.10);
+        --line-strong: rgba(20, 22, 30, 0.20);
+        --accent: #2f6fe0;
+        --accent-bright: #1550c9;
+        --accent-2: #6a45c9;
+        --accent-3: #0b7d69;
+        --cta-bg: #14161c;
+        --cta-ink: #ffffff;
+        --cta-shadow: rgba(20, 22, 30, 0.22);
+        --ghost-hover-bg: rgba(20, 22, 30, 0.05);
+        --ghost-hover-border: rgba(20, 22, 30, 0.28);
+        --nav-bg: rgba(255, 255, 255, 0.65);
+        --nav-bg-scrolled: rgba(255, 255, 255, 0.88);
+        --media-frame-shadow: 0 30px 80px -30px rgba(20, 22, 30, 0.16);
+      }
     }
 
     html {
@@ -41,6 +113,7 @@
       background: var(--bg);
       color: var(--ink);
       overflow-x: hidden;
+      transition: background-color .2s ease, color .2s ease;
     }
 
     a { color: inherit; }
@@ -52,7 +125,10 @@
       z-index: 0;
       pointer-events: none;
       opacity: 0.6;
+      transition: opacity .2s ease;
     }
+
+    :root[data-theme="light"] #starfield { opacity: 0; }
 
     .noise-overlay {
       position: fixed;
@@ -76,7 +152,7 @@
       justify-content: space-between;
       padding: 0 28px;
       height: 64px;
-      background: rgba(5, 5, 7, 0.55);
+      background: var(--nav-bg);
       backdrop-filter: saturate(160%) blur(16px);
       -webkit-backdrop-filter: saturate(160%) blur(16px);
       border-bottom: 1px solid transparent;
@@ -85,7 +161,7 @@
 
     nav.scrolled {
       border-bottom-color: var(--line);
-      background: rgba(5, 5, 7, 0.82);
+      background: var(--nav-bg-scrolled);
     }
 
     .nav-logo {
@@ -97,6 +173,33 @@
       text-decoration: none;
     }
 
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+    }
+
+    .theme-toggle:hover { color: var(--ink); border-color: var(--line-strong); }
+    .theme-toggle svg { width: 15px; height: 15px; display: block; }
+    .theme-toggle .icon-moon { display: none; }
+    :root[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+    :root[data-theme="light"] .theme-toggle .icon-moon { display: block; }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+
     .nav-link {
       font-size: 0.75rem;
       font-weight: 600;
@@ -105,9 +208,20 @@
       color: var(--muted);
       text-decoration: none;
       transition: color 0.2s ease;
+      white-space: nowrap;
     }
 
     .nav-link:hover { color: var(--ink); }
+
+    /* Nav gets tight once the theme toggle joins three links + logo at
+       phone widths, tighten padding/gap/type before anything touches. */
+    @media (max-width: 480px) {
+      nav { padding: 0 16px; }
+      .nav-links { gap: 12px; }
+      .nav-link { font-size: 0.6875rem; letter-spacing: 0.06em; }
+      .theme-toggle { width: 28px; height: 28px; }
+      .theme-toggle svg { width: 13px; height: 13px; }
+    }
 
     /* ── Hero ── */
     .hero {
@@ -195,18 +309,18 @@
       align-items: center;
       gap: 8px;
       padding: 15px 30px;
-      background: #fff;
-      color: #050507;
+      background: var(--cta-bg);
+      color: var(--cta-ink);
       font-size: 0.9375rem;
       font-weight: 700;
       letter-spacing: -0.01em;
       border-radius: 980px;
       text-decoration: none;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
       box-shadow: 0 0 0 0 rgba(255,255,255,0);
     }
 
-    .cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,255,255,0.18); }
+    .cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--cta-shadow); }
 
     .cta-ghost {
       display: inline-flex;
@@ -224,7 +338,7 @@
       transition: background 0.2s ease, border-color 0.2s ease;
     }
 
-    .cta-ghost:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.3); }
+    .cta-ghost:hover { background: var(--ghost-hover-bg); border-color: var(--ghost-hover-border); }
 
     .scroll-cue {
       position: absolute;
@@ -473,13 +587,15 @@
     .cookbook-item h4 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 4px; color: var(--ink); }
     .cookbook-item p { font-size: 0.875rem; color: var(--muted); line-height: 1.55; }
 
-    /* Mock terminal/scan visual */
+    /* Mock terminal/scan visual: the panel chrome follows the page theme,
+       but the terminal body itself stays permanently dark, like a real
+       terminal window does regardless of OS theme. */
     .scan-panel {
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: 20px;
       padding: 4px;
-      box-shadow: 0 30px 80px -30px rgba(79, 140, 255, 0.25);
+      box-shadow: var(--media-frame-shadow);
     }
 
     .scan-bar {
@@ -492,29 +608,29 @@
     .scan-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line-strong); }
     .scan-bar-label { margin-left: 8px; font-size: 0.75rem; color: var(--muted-2); font-family: SFMono-Regular, ui-monospace, Menlo, monospace; }
 
-    .scan-body { background: var(--bg); border-radius: 16px; padding: 22px; font-family: SFMono-Regular, ui-monospace, Menlo, monospace; font-size: 0.8125rem; line-height: 1.9; }
+    .scan-body { background: #050507; border-radius: 16px; padding: 22px; font-family: SFMono-Regular, ui-monospace, Menlo, monospace; font-size: 0.8125rem; line-height: 1.9; }
 
-    .scan-line { color: var(--muted); display: flex; justify-content: space-between; gap: 12px; }
-    .scan-line .ok { color: var(--accent-3); }
-    .scan-line .val { color: var(--ink); }
+    .scan-line { color: #9296a3; display: flex; justify-content: space-between; gap: 12px; }
+    .scan-line .ok { color: #38e1c6; }
+    .scan-line .val { color: #f5f6f8; }
 
     .scan-result {
       margin-top: 14px;
       padding-top: 14px;
-      border-top: 1px solid var(--line);
+      border-top: 1px solid rgba(255, 255, 255, 0.09);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .scan-result .model-name { font-size: 0.875rem; color: var(--ink); font-weight: 600; }
+    .scan-result .model-name { font-size: 0.875rem; color: #f5f6f8; font-weight: 600; }
     .scan-result .fit-badge {
       font-size: 0.6875rem;
       font-weight: 700;
       letter-spacing: 0.04em;
       text-transform: uppercase;
       color: #050507;
-      background: var(--accent-3);
+      background: #38e1c6;
       padding: 4px 10px;
       border-radius: 980px;
     }
@@ -537,7 +653,7 @@
       border: 1px solid var(--line);
       border-radius: 20px;
       padding: 10px;
-      box-shadow: 0 30px 80px -30px rgba(79, 140, 255, 0.2);
+      box-shadow: var(--media-frame-shadow);
     }
 
     .proof-video video {
@@ -721,10 +837,14 @@
 
   <nav id="site-nav">
     <a class="nav-logo" href="index.html">aime</a>
-    <div style="display:flex;gap:28px;align-items:center;">
+    <div class="nav-links">
       <a class="nav-link" href="learn.html">Learn</a>
       <a class="nav-link" href="start.html">Get started</a>
       <a class="nav-link" href="legal.html">Legal</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme" title="Toggle color theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
     </div>
   </nav>
 
@@ -1052,6 +1172,18 @@
         nav.classList.toggle('scrolled', window.scrollY > 8);
       }, { passive: true });
 
+      // Light/dark theme toggle
+      var themeToggle = document.getElementById('themeToggle');
+      if (themeToggle) {
+        themeToggle.addEventListener('click', function () {
+          var root = document.documentElement;
+          var current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+          var next = current === 'light' ? 'dark' : 'light';
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('aime-theme', next); } catch (e) {}
+        });
+      }
+
       // Expandable cards
       document.querySelectorAll('.card').forEach(function(card) {
         function toggle() {
@@ -1092,16 +1224,20 @@
 
         function draw(t) {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.fillStyle = '#fff';
-          for (var i = 0; i < stars.length; i++) {
-            var s = stars[i];
-            var twinkle = prefersReducedMotion ? s.a : s.a * (0.6 + 0.4 * Math.sin(t * s.speed + s.phase));
-            ctx.globalAlpha = twinkle;
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-            ctx.fill();
+          // The starfield is a dark-mode-only effect (CSS hides it in light
+          // mode); skip the draw work entirely while light mode is active.
+          if (document.documentElement.getAttribute('data-theme') !== 'light') {
+            ctx.fillStyle = '#fff';
+            for (var i = 0; i < stars.length; i++) {
+              var s = stars[i];
+              var twinkle = prefersReducedMotion ? s.a : s.a * (0.6 + 0.4 * Math.sin(t * s.speed + s.phase));
+              ctx.globalAlpha = twinkle;
+              ctx.beginPath();
+              ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            ctx.globalAlpha = 1;
           }
-          ctx.globalAlpha = 1;
           if (!prefersReducedMotion) requestAnimationFrame(draw);
         }
 

@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="How aime actually works: one switch between a private local model and Claude Code, memory that saves itself and draws a map, and a privacy model in plain English." />
   <title>Learn more · aime</title>
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('aime-theme');
+        var theme = stored === 'light' || stored === 'dark'
+          ? stored
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -13,6 +24,7 @@
     }
 
     :root {
+      color-scheme: dark;
       --bg: #050507;
       --bg-raised: #0a0b10;
       --surface: #0d0f16;
@@ -26,7 +38,67 @@
       --accent-bright: #7fb0ff;
       --accent-2: #8b7bff;
       --accent-3: #38e1c6;
-      --gradient: linear-gradient(115deg, #4f8cff 0%, #8b7bff 50%, #38e1c6 100%);
+      --gradient: linear-gradient(115deg, var(--accent) 0%, var(--accent-2) 50%, var(--accent-3) 100%);
+      --cta-bg: #fff;
+      --cta-ink: #050507;
+      --cta-shadow: rgba(255, 255, 255, 0.18);
+      --ghost-hover-bg: rgba(255, 255, 255, 0.06);
+      --ghost-hover-border: rgba(255, 255, 255, 0.3);
+      --nav-bg: rgba(5, 5, 7, 0.55);
+      --nav-bg-scrolled: rgba(5, 5, 7, 0.82);
+      --media-frame-shadow: 0 30px 80px -30px rgba(79, 140, 255, 0.22);
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #ffffff;
+      --bg-raised: #f7f8fa;
+      --surface: #f2f3f6;
+      --surface-2: #e9ebef;
+      --ink: #14161c;
+      --muted: #52565f;
+      --muted-2: #767a85;
+      --line: rgba(20, 22, 30, 0.10);
+      --line-strong: rgba(20, 22, 30, 0.20);
+      --accent: #2f6fe0;
+      --accent-bright: #1550c9;
+      --accent-2: #6a45c9;
+      --accent-3: #0b7d69;
+      --cta-bg: #14161c;
+      --cta-ink: #ffffff;
+      --cta-shadow: rgba(20, 22, 30, 0.22);
+      --ghost-hover-bg: rgba(20, 22, 30, 0.05);
+      --ghost-hover-border: rgba(20, 22, 30, 0.28);
+      --nav-bg: rgba(255, 255, 255, 0.65);
+      --nav-bg-scrolled: rgba(255, 255, 255, 0.88);
+      --media-frame-shadow: 0 30px 80px -30px rgba(20, 22, 30, 0.16);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme]) {
+        color-scheme: light;
+        --bg: #ffffff;
+        --bg-raised: #f7f8fa;
+        --surface: #f2f3f6;
+        --surface-2: #e9ebef;
+        --ink: #14161c;
+        --muted: #52565f;
+        --muted-2: #767a85;
+        --line: rgba(20, 22, 30, 0.10);
+        --line-strong: rgba(20, 22, 30, 0.20);
+        --accent: #2f6fe0;
+        --accent-bright: #1550c9;
+        --accent-2: #6a45c9;
+        --accent-3: #0b7d69;
+        --cta-bg: #14161c;
+        --cta-ink: #ffffff;
+        --cta-shadow: rgba(20, 22, 30, 0.22);
+        --ghost-hover-bg: rgba(20, 22, 30, 0.05);
+        --ghost-hover-border: rgba(20, 22, 30, 0.28);
+        --nav-bg: rgba(255, 255, 255, 0.65);
+        --nav-bg-scrolled: rgba(255, 255, 255, 0.88);
+        --media-frame-shadow: 0 30px 80px -30px rgba(20, 22, 30, 0.16);
+      }
     }
 
     html { font-size: 16px; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; overflow-x: hidden; }
@@ -36,6 +108,7 @@
       background: var(--bg);
       color: var(--ink);
       overflow-x: hidden;
+      transition: background-color .2s ease, color .2s ease;
     }
 
     a { color: inherit; }
@@ -62,18 +135,39 @@
       justify-content: space-between;
       padding: 0 28px;
       height: 64px;
-      background: rgba(5, 5, 7, 0.55);
+      background: var(--nav-bg);
       backdrop-filter: saturate(160%) blur(16px);
       -webkit-backdrop-filter: saturate(160%) blur(16px);
       border-bottom: 1px solid transparent;
       transition: border-color 0.3s ease, background 0.3s ease;
     }
 
-    nav.scrolled { border-bottom-color: var(--line); background: rgba(5, 5, 7, 0.82); }
+    nav.scrolled { border-bottom-color: var(--line); background: var(--nav-bg-scrolled); }
 
     .nav-logo { font-size: 0.9375rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
-    .nav-link { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s ease; }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-link { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s ease; white-space: nowrap; }
     .nav-link:hover { color: var(--ink); }
+
+    @media (max-width: 480px) {
+      nav { padding: 0 16px; }
+      .nav-links { gap: 12px; }
+      .nav-link { font-size: 0.6875rem; letter-spacing: 0.06em; }
+      .theme-toggle { width: 28px; height: 28px; }
+      .theme-toggle svg { width: 13px; height: 13px; }
+    }
+
+    .theme-toggle {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      border: 1px solid var(--line); background: var(--surface); color: var(--muted);
+      cursor: pointer; transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+    }
+    .theme-toggle:hover { color: var(--ink); border-color: var(--line-strong); }
+    .theme-toggle svg { width: 15px; height: 15px; display: block; }
+    .theme-toggle .icon-moon { display: none; }
+    :root[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+    :root[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 
     /* ── Section shell ── */
     section { padding: 96px 20px; position: relative; }
@@ -144,11 +238,11 @@
 
     .cta {
       display: inline-flex; align-items: center; gap: 8px; padding: 15px 30px;
-      background: #fff; color: #050507; font-size: 0.9375rem; font-weight: 700;
-      border-radius: 980px; text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease;
+      background: var(--cta-bg); color: var(--cta-ink); font-size: 0.9375rem; font-weight: 700;
+      border-radius: 980px; text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
     }
 
-    .cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,255,255,0.18); }
+    .cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--cta-shadow); }
 
     .cta-ghost {
       display: inline-flex; align-items: center; gap: 8px; padding: 15px 30px;
@@ -157,7 +251,7 @@
       transition: background 0.2s ease, border-color 0.2s ease;
     }
 
-    .cta-ghost:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.3); }
+    .cta-ghost:hover { background: var(--ghost-hover-bg); border-color: var(--ghost-hover-border); }
 
     .cta-group { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
 
@@ -216,7 +310,7 @@
     .proof-grid { display: grid; grid-template-columns: 1fr; gap: 20px; max-width: 1080px; margin: 0 auto 24px; }
     @media (min-width: 800px) { .proof-grid { grid-template-columns: 1fr 1fr; } }
 
-    .proof-video { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 10px; box-shadow: 0 30px 80px -30px rgba(79, 140, 255, 0.2); }
+    .proof-video { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 10px; box-shadow: var(--media-frame-shadow); }
     .proof-video video { width: 100%; display: block; border-radius: 14px; background: #000; aspect-ratio: 16 / 9; }
     .proof-caption { font-size: 0.8125rem; color: var(--muted); padding: 12px 6px 4px; line-height: 1.55; }
 
@@ -326,9 +420,13 @@
 
   <nav id="site-nav">
     <a class="nav-logo" href="index.html">aime</a>
-    <div style="display:flex;gap:28px;align-items:center;">
+    <div class="nav-links">
       <a class="nav-link" href="start.html">Get started</a>
       <a class="nav-link" href="legal.html">Legal</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme" title="Toggle color theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
     </div>
   </nav>
 
@@ -639,6 +737,17 @@
       window.addEventListener('scroll', function() {
         nav.classList.toggle('scrolled', window.scrollY > 8);
       }, { passive: true });
+
+      var themeToggle = document.getElementById('themeToggle');
+      if (themeToggle) {
+        themeToggle.addEventListener('click', function () {
+          var root = document.documentElement;
+          var current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+          var next = current === 'light' ? 'dark' : 'light';
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('aime-theme', next); } catch (e) {}
+        });
+      }
 
       document.querySelectorAll('.card').forEach(function(card) {
         function toggle() {
