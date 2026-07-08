@@ -50,7 +50,7 @@ All 16 poster files (8 concepts × 2 sizes) pass the rubric. Only `poster-01` is
 |---|---|---|---|
 | `v1-offline-streaming.mp4` | 16.9s | **GOOD** | Real typing (not pasted), real Ollama streaming response, dark mode, toggle visible throughout. Muted-safe (no audio track). H.264, 357KB. **Used on site.** |
 | `v2-online-file-create.mp4` | 22.8s | **GOOD** | Flips Offline→Online on camera, asks for a 5-item camping CSV, Claude Code streams a response and the file lands in the files strip — then mode was restored to offline immediately after capture. Sped 1.5x from the raw 34s take to land in the 10–25s target without cutting any of the narrative. H.264, 135KB. **Used on site.** |
-| `v3-graph-drag.mp4` | 12.4s | **GOOD** | Optional clip. Labels force-hidden for the entire recording (verified via a 150ms re-hide interval, since the graph simulation keeps re-rendering `<text>` nodes). Shows a real node drag. Slowed 1.8x from the raw 6.9s take so the drag reads clearly. Not used on site (kept the section lean per the "don't redesign wholesale" rule) but ready for ad use. |
+| `v3-graph-drag.mp4` | 12.4s | **BAD** | Optional clip. Labels force-hidden for the entire recording (verified via a 150ms re-hide interval, since the graph simulation keeps re-rendering `<text>` nodes). Shows a real node drag. Slowed 1.8x from the raw 6.9s take so the drag reads clearly. Not used on site (kept the section lean per the "don't redesign wholesale" rule) but ready for ad use. |
 
 None of the raw intermediate `.webm` captures were kept — only the final H.264 MP4s.
 
@@ -61,3 +61,8 @@ None of the raw intermediate `.webm` captures were kept — only the final H.264
 - **25 GOOD** / **3 BAD** out of 28 evaluated candidates.
 - BAD assets (`raw-chat-complete.png`, `raw-mobile-chat.png`, `raw-mobile-graph.png`) are kept in this folder for the record, per instructions, but are not referenced anywhere in `index.html`.
 - Site update uses 5 real screenshots + 2 videos + 1 poster (as share image), all GOOD.
+
+
+## Correction (2026-07-07, PM)
+
+- `v3-graph-drag.mp4` is revoked to **BAD** and removed: frame inspection at ~3s shows real unredacted memory/session labels and a real filesystem path. The 150ms label re-hide did not hold during the drag. Never grade a graph video GOOD without frame-by-frame inspection.
